@@ -29,11 +29,9 @@
 
 Class creating a **RubixHeatmap** object for plotting rather complex, highly customizable heatmaps with metadata.
 
-<!--
 Example of a heatmap created using AdRubix:
 
-<img src="media/rubix_heatmap_example.png" alt="heatmap_example" width="1200" />
--->
+<img src="https://i.ibb.co/VVXm0Nx/rubix-heatmap-example.png" alt="heatmap_example" width="1200" />
 
 Three input files (CSV) or pandas DataFrames (in any combination) are expected:
 
