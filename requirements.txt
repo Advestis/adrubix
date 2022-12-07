@@ -1,0 +1,12 @@
+pandas==1.4.3
+
+bokeh~=2.4.3
+holoviews~=1.15.0
+panel==0.13.1
+
+html2image~=2.0.1
+
+selenium~=4.4.3
+chromedriver-binary~=109.0.5414.25.0
+
+pytest
