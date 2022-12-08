@@ -775,7 +775,7 @@ class RubixHeatmap:
                 plot_level_four
             ]
 
-        fig = gridplot(children=plot_children, sizing_mode="stretch_both")
+        fig = gridplot(children=plot_children, sizing_mode="stretch_both", toolbar_location="left")
 
         # Show or save the plot
         if self.plot_save_path is None:
@@ -810,11 +810,7 @@ class RubixHeatmap:
                 png_path = f"{dir_for_saving}{sep}{file_name}.png"
 
                 # Temporary HTML plot without toolbar
-                tmp_fig = gridplot(
-                    children=plot_children,
-                    sizing_mode="stretch_both",
-                    toolbar_location=None
-                )
+                tmp_fig = gridplot(children=plot_children, sizing_mode="stretch_both", toolbar_location=None)
 
                 # With Html2image : DEPRECATED
                 if self.png_tool == "hti":
