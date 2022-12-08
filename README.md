@@ -8,6 +8,7 @@
 [![push-pypi](https://github.com/Advestis/adrubix_jmp/actions/workflows/push-pypi.yml/badge.svg)](https://github.com/Advestis/adrubix_jmp/actions/workflows/push-pypi.yml)
 [![push-doc](https://github.com/Advestis/adrubix_jmp/actions/workflows/push-doc.yml/badge.svg)](https://github.com/Advestis/adrubix_jmp/actions/workflows/push-doc.yml)
 
+
 ![maintained](https://img.shields.io/badge/Maintained%3F-yes-green.svg)
 [![issues](https://img.shields.io/github/issues/Advestis/adrubix_jmp.svg)](https://github.com/Advestis/adrubix_jmp/issues)
 [![pr](https://img.shields.io/github/issues-pr/Advestis/adrubix_jmp.svg)](https://github.com/Advestis/adrubix_jmp/pulls)
@@ -31,7 +32,7 @@ Class creating a **RubixHeatmap** object for plotting rather complex, highly cus
 
 Example of a heatmap created using AdRubix:
 
-<img src="https://i.ibb.co/VVXm0Nx/rubix-heatmap-example.png" alt="heatmap_example" width="1200" />
+<img src="https://i.ibb.co/zhqNkjb/rubix-heatmap-example.png" alt="heatmap_example" width="1200" />
 
 Three input files (CSV) or pandas DataFrames (in any combination) are expected:
 
