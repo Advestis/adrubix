@@ -189,3 +189,7 @@ jlog
 **/*~
 # But keep .gitignore :)
 !/.gitignore
+
+# Dev data files and tests
+/data*/
+/dev*/
