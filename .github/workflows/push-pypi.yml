@@ -39,6 +39,10 @@ jobs:
           path: ${{ env.pythonLocation }}
           key: ${{ env.pythonLocation }}-${{ hashFiles('setup.cfg') }}
 
+      - name: install requirements
+        run: |
+          pip install -r requirements.txt
+
       - name: build
         run: |
           pip install --upgrade --upgrade-strategy eager pip build
