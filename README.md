@@ -3,14 +3,14 @@
 
 #### Status
 <!---
-[![pytests](https://github.com/afedorov-advestis/adrubix_jmp/actions/workflows/pull-request.yml/badge.svg)](https://github.com/afedorov-advestis/adrubix_jmp/actions/workflows/pull-request.yml)
+[![pytests](https://github.com/Advestis/adrubix_jmp/actions/workflows/pull-request.yml/badge.svg)](https://github.com/Advestis/adrubix_jmp/actions/workflows/pull-request.yml)
 -->
-[![push-pypi](https://github.com/afedorov-advestis/adrubix_jmp/actions/workflows/push-pypi.yml/badge.svg)](https://github.com/afedorov-advestis/adrubix_jmp/actions/workflows/push-pypi.yml)
-[![push-doc](https://github.com/afedorov-advestis/adrubix_jmp/actions/workflows/push-doc.yml/badge.svg)](https://github.com/afedorov-advestis/adrubix_jmp/actions/workflows/push-doc.yml)
+[![push-pypi](https://github.com/Advestis/adrubix_jmp/actions/workflows/push-pypi.yml/badge.svg)](https://github.com/Advestis/adrubix_jmp/actions/workflows/push-pypi.yml)
+[![push-doc](https://github.com/Advestis/adrubix_jmp/actions/workflows/push-doc.yml/badge.svg)](https://github.com/Advestis/adrubix_jmp/actions/workflows/push-doc.yml)
 
 ![maintained](https://img.shields.io/badge/Maintained%3F-yes-green.svg)
-[![issues](https://img.shields.io/github/issues/afedorov-advestis/adrubix_jmp.svg)](https://github.com/afedorov-advestis/adrubix_jmp/issues)
-[![pr](https://img.shields.io/github/issues-pr/afedorov-advestis/adrubix_jmp.svg)](https://github.com/afedorov-advestis/adrubix_jmp/pulls)
+[![issues](https://img.shields.io/github/issues/Advestis/adrubix_jmp.svg)](https://github.com/Advestis/adrubix_jmp/issues)
+[![pr](https://img.shields.io/github/issues-pr/Advestis/adrubix_jmp.svg)](https://github.com/Advestis/adrubix_jmp/pulls)
 
 
 #### Compatibilities
