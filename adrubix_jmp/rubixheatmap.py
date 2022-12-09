@@ -283,6 +283,12 @@ class RubixHeatmap:
         else:
             self.normalize_along = None
 
+        if (
+                (self.scale_along == 0 and self.normalize_along == 0)
+                or (self.scale_along == 1 and self.normalize_along == 1)
+        ):
+            raise ValueError("You cannot apply both `scale_along` and `normalize_along` to the same axis!")
+
         # Set view options
         self.show_metadata_rows = show_metadata_rows
         self.show_metadata_rows_labels = show_metadata_rows_labels
