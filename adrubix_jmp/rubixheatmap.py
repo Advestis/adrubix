@@ -75,8 +75,9 @@ class RubixHeatmap:
     metadata_cols_file: Optional[str]
         Name of the file with metadata for column annotations
     plot_save_path: Optional[str]
-        Path to an HTML file for saving the plot
-    show_html: Union[bool, int, str]
+        Path to an HTML file for saving the plot. If none is provided, HTML is saved in current working directory
+        under the name <your_python_script_name>.html and automatically opened in a web browser.
+    save_html: Union[bool, int, str]
         If equal to True / string starting with "T" or "t", e.g. "True" / "1" or 1, save HTML plot
         (if save_png is False, will always save HTML)
     save_png: Union[bool, int, str]
@@ -86,13 +87,13 @@ class RubixHeatmap:
         // "native" (default) = with Bokeh's export_png() (requires Selenium + ChromeDriver installed, takes more time)
         // "hti" = with html2image library (only requires a Chromium-based browser on the machine,
            but leaves transparent background and crops PNG to screen size, thus unreliable for large plots)
-    scale_along: Optional[int]
-        // 0 (default) or "columns" = per columns : x => x / max(column)
-        // 1 or "rows" = per rows : x => x / max(row)
-        // None (also any other value except for 0 or 1) = do not scale
     color_scaling_quantile: Union[int, float]
-        Quantile for scaling the data to get rid of outliers
-    normalize_along: Optional[int]
+        Quantile for capping and scaling the data to get rid of outliers (read more about it in the README)
+    scale_along: Union[int, str, None]
+        // 0 or "columns" = per columns : x => x / max(column)
+        // 1 or "rows" = per rows : x => x / max(row)
+        // None (default, and also any other value except for 0 or 1) = do not scale
+    normalize_along: Union[int, str, None]
         // 0 or "columns" = per columns : x => (x - median(column)) / MAD(column)
         // 1 or "rows" = per rows : x => (x - median(row)) / MAD(row)
         // None (default, and also any other value except for 0 or 1) = do not normalize
@@ -121,7 +122,7 @@ class RubixHeatmap:
     show_cols_legend: bool
         Whether to plot the legend for column annotations (default True)
     colormap_main: str
-        Main colormap name, must be known by holoviews (default "bwr" / "YlOrRd" for non-negative data).
+        Main colormap name, must be known by holoviews (default "coolwarm" / "YlOrRd" for non-negative data).
         Ref. 1 https://holoviews.org/user_guide/Colormaps.html#perceptually-uniform-sequential-colormaps
         Ref. 2 https://holoviews.org/user_guide/Colormaps.html#diverging-colormaps
     colormap_metarows: str
@@ -176,12 +177,12 @@ class RubixHeatmap:
             metadata_rows_file: Optional[str] = None,
             metadata_cols_file: Optional[str] = None,
             plot_save_path: Optional[str] = None,
-            show_html: Union[bool, int, str] = True,
+            save_html: Union[bool, int, str] = True,
             save_png: Union[bool, int, str] = False,
             png_tool: str = "native",
-            scale_along: Optional[int] = 0,
             color_scaling_quantile: Union[int, float] = 95,
-            normalize_along: Optional[int] = None,
+            scale_along: Union[int, str, None] = None,
+            normalize_along: Union[int, str, None] = None,
             colorbar_title: str = "",
             colorbar_height: Optional[int] = None,
             colorbar_location: str = "bottom",
@@ -193,7 +194,7 @@ class RubixHeatmap:
             show_rows_legend: bool = True,
             rows_legend_onecol: bool = True,
             show_cols_legend: bool = True,
-            colormap_main: str = "bwr",
+            colormap_main: str = "coolwarm",
             colormap_metarows: str = "glasbey",
             colormap_metacols: str = "Category20",
             axes_labels_style: str = "bold",
@@ -255,14 +256,16 @@ class RubixHeatmap:
         if self.save_png:
             self.save_html = False
             if (
-                    isinstance(show_html, bool) and show_html
-                    or isinstance(show_html, str) and show_html.lower()[0] == "t"
-                    or isinstance(show_html, str) and show_html == "1"
-                    or isinstance(show_html, int) and show_html == 1
+                    isinstance(save_html, bool) and save_html
+                    or isinstance(save_html, str) and save_html.lower()[0] == "t"
+                    or isinstance(save_html, str) and save_html == "1"
+                    or isinstance(save_html, int) and save_html == 1
             ):
                 self.save_html = True
         else:
             self.save_html = True
+
+        self.color_scaling_quantile = color_scaling_quantile
 
         # Set data scaling
         if scale_along in (0, "columns", "cols"):
@@ -271,7 +274,6 @@ class RubixHeatmap:
             self.scale_along = 1
         else:
             self.scale_along = None
-        self.color_scaling_quantile = color_scaling_quantile
 
         # Set data normalization
         if normalize_along in (0, "columns", "cols"):
@@ -447,13 +449,16 @@ class RubixHeatmap:
         Scale main data along columns (scale_along = 0) or rows (scale_along = 1)
         """
 
-        def scale(x):
+        if quant < 80 or quant > 100:
+            raise ValueError(f"Wrong quantile value: {quant}. Please use percentage from 80 to 100")
+
+        def cap_scale(x):
             quantile = np.percentile(x, quant)
             x = x.apply(lambda x: quantile if x > quantile else x)
-            res = x / quantile
-            return res
+            x /= quantile
+            return x
 
-        return data.apply(scale, axis=scale_along)
+        return data.apply(cap_scale, axis=scale_along)
 
     def normalize_data(
             self,
@@ -465,21 +470,30 @@ class RubixHeatmap:
         Normalize main data along columns (normalize_along = 0) or rows (normalize_along = 1)
         """
 
+        if quant < 80 or quant > 100:
+            raise ValueError(f"Wrong quantile value: {quant}. Please use percentage from 80 to 100")
+
+        def cap_scale(x):
+            quant_high = 50 + quant / 2
+            quant_low = 50 - quant / 2
+            quantile_high = np.percentile(x, quant_high)
+            quantile_low = np.percentile(x, quant_low)
+            x = x.apply(lambda x: quantile_high if x > quantile_high else (quantile_low if x < quantile_low else x))
+            x /= quantile_high
+            return x
+
         def center_reduce(x):
             median = np.median(x)
             dev = x - median
             median_abs_dev = np.median(abs(dev))
             x = dev / median_abs_dev
+            x = x.apply(lambda x: 1 if x > 1 else (-1 if x < -1 else x))
+            return x
 
-            quant_high = 50 + quant / 2
-            quant_low = 50 - quant / 2
-            quantile_high = np.percentile(x, quant_high)
-            quantile_low = np.percentile(x, quant_low)
-            res = x.apply(lambda x: quantile_high if x > quantile_high else (quantile_low if x < quantile_low else x))
+        data = data.apply(cap_scale, axis=normalize_along)
+        data = data.apply(center_reduce, axis=normalize_along).fillna(0.0)
 
-            return res
-
-        return data.apply(center_reduce, axis=normalize_along)
+        return data
 
     def set_proper_indexes(self) -> None:
         """

@@ -38,21 +38,22 @@ Example of a heatmap created using AdRubix:
 
 Three input files (CSV) or pandas DataFrames (in any combination) are expected:
 
-- **Main data** (clusterized by applying, for example, NMTF to raw data).
+- **Main data** (clusterized by applying, for example, NMTF to raw data)
   
-  _Example of rows: biomarkers at different timepoints._
-  
-  _Example of columns: patients._
+  - _Example A (see figure above) : rows = genes, columns = cell groups for each patient_
+  - _Example B : rows = biomarkers at different timepoints, columns = patients_
 
 
-- **Metadata for rows**. 
-  
-  _Example: column 1 = timepoint, column 2 = biomarker._
+- **Metadata for rows**
+
+  - _Example A : column 1 = gene group, column 2 = gene_
+  - _Example B : column 1 = timepoint, column 2 = biomarker_
 
 
-- **Metadata for columns**.
+- **Metadata for columns**
 
-  _Example: row 1 = score (Y/N), row 2 = treatment (several options), row 3 = cluster no._
+  - _Example A : row 1 = patient, row 2 = cell type_
+  - _Example B : row 1 = score (Y/N), row 2 = treatment, row 3 = cluster_
 
 The resulting plot is composed of the following elements, all rendered using holoviews.HeatMap().
 Their disposition generally looks like :
@@ -72,8 +73,8 @@ Their disposition generally looks like :
 - `[CL]` _column legend_ (CA explained) : optional
 - `####` white space filler
 
-`plot()` method of the class will save one of the following, or both :
-- **HTML plot** : if `save_html` evaluates to True, or in any case if `save_png` evaluates to False
+`plot()` method of the class will save :
+- **HTML plot** with an interactive toolbar enabling zooming into main heatmap and metadata
 - **PNG image** corresponding to the HTML plot (without toolbar) : if `save_png` evaluates to True
 
 With `plot_save_path` specified, HTML and PNG are saved according to it,
@@ -98,22 +99,33 @@ Default values are bolded, where applicable.
    - `data` (DF) or `data_file` (CSV file name)
    - `metadata_rows` (DF) or `metadata_rows_file` (CSV file name)
    - `metadata_cols` (DF) or `metadata_cols_file` (CSV file name)
-   - `data_path` if any of `[...]_file` parameters are used. **Do not forget a slash at the end of the path**.
+   - `data_path` required if any of `[...]_file` parameters are used. **Do not forget a slash at the end of the path**.
      Also, _if you work on a Windows machine, be sure to use double backslashes `\\` instead of single slashes_.
-   - `plot_save_path` = path to HTML file to be saved, _including_ its name
-     (PNG image will be saved in the same folder under the exact same name except for the extension)
-   - [ optional ] `show_html` = **True**/False or 1/0
-   - [ optional ] `save_png` = True/**False** or 1/0
+   - [ optional ] `plot_save_path` = path to HTML file to be saved, **including its name**.
+     If **None** is provided, HTML is saved in current working directory
+     under the name `<your_python_script_name>.html` and automatically opened in a web browser.
+   - [ optional ] `save_png` = True/**False** or 1/0. PNG image will be saved in the same folder as HTML
+     under the same name except for the extension .png
 
 
 2. **Data scaling and normalization, dataprep**
+
+   **NB.** It is still preferred that you do data scaling and/or normalization externally before using `RubixHeatmap`
+   in order to have more control and transparency over your data.
+
+
+   - [ optional ] `color_scaling_quantile` = quantile for getting rid of outliers (in %), default **95**,
+     accepted 80...100. Applied both to `scale_along` and `normalize_along` options.
+     - When applied to `scale_along`, `color_scaling_quantile=95` will cap top (> 95% quantile) values.
+     - When applied to `normalize_along`, `color_scaling_quantile=95` will cap both top (> 97.5% quantile)
+       and bottom (<2.5% quantile) values before normalizing data (see below).
    - [ optional ] `scale_along` = "columns"/"rows" or 0/1 for scaling and capping data along the specified axis.
      Default : **None** = do not normalize.
    - [ optional ] `normalize_along` = "columns"/"rows" or 0/1 for normalizing data along the specified axis :
      `(x - median(x) by column or row) / MAD(x) by column or row`, where `MAD` is median average deviation.
      Default : **None** = do not normalize.
-   - [ optional ] `color_scaling_quantile` = quantile for getting rid of outliers (in %), default **95**.
-     Applicable both to scaling and normalization.
+
+
    - [ optional ] `data_rows_to_drop`, `data_cols_to_drop` = names of rows/columns in main data not intended
      to be plotted. Nonexistent names will be skipped without raising an error.
 
@@ -138,7 +150,7 @@ Default values are bolded, where applicable.
 
 
 6. **Colormaps** (must be known by **holoviews**)
-   - [ optional ] `colormap_main` (default "**bwr**" / "**YlOrRd**" for non-negative data)
+   - [ optional ] `colormap_main` (default "**coolwarm**" / "**YlOrRd**" for non-negative data)
    - [ optional ] `colormap_metarows` (default "**Glasbey**")
    - [ optional ] `colormap_metacols` (default "**Category20**")
 
@@ -164,7 +176,7 @@ hm = RubixHeatmap(
     metadata_rows_file="meta_rows.csv",
     metadata_cols_file="meta_cols.csv",
     plot_save_path="/home/user/myproject/output/plot.html",
-    show_html=False,
+    save_html=False,
     save_png=True,
     colorbar_title="my colorbar",
     colorbar_location="top",
