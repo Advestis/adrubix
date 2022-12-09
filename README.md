@@ -126,7 +126,7 @@ Default values are bolded, where applicable.
      Default : **None** = do not normalize.
 
 
-   - [ optional ] `data_rows_to_drop`, `data_cols_to_drop` = names of rows/columns in main data not intended
+   - [ optional ] `data_rows_to_drop`, `data_cols_to_drop` = lists of the names of rows/columns in main data not intended
      to be plotted. Nonexistent names will be skipped without raising an error.
 
 
@@ -161,7 +161,7 @@ Default values are bolded, where applicable.
 
 
 8. Other
-   - [ optional ] `row_labels_for_highlighting` = keywords for identifying row labels to be highlighted
+   - [ optional ] `row_labels_for_highlighting` = list of keywords for identifying row labels to be highlighted
      (in red and italic to the right of the heatmap)
 
 
@@ -176,16 +176,17 @@ hm = RubixHeatmap(
     metadata_rows_file="meta_rows.csv",
     metadata_cols_file="meta_cols.csv",
     plot_save_path="/home/user/myproject/output/plot.html",
-    save_html=False,
     save_png=True,
+    scale_along="columns",
     colorbar_title="my colorbar",
     colorbar_location="top",
     show_metadata_rows_labels=True,
     show_rows_legend=False,
-    rows_legend_onecol=False,
     colormap_main="fire",
     heatmap_width=1500,
-    heatmap_height=1000
+    heatmap_height=1000,
+    data_rows_to_drop=["useless_row_1", "useless_row_2"],
+    row_labels_for_highlighting=["row_keyword_A", "row_keyword_B"]
 )
 hm.plot()
 ```
