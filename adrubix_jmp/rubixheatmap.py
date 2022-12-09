@@ -76,7 +76,7 @@ class RubixHeatmap:
         Name of the file with metadata for column annotations
     plot_save_path: Optional[str]
         Path to an HTML file for saving the plot
-    save_html: Union[bool, int, str]
+    show_html: Union[bool, int, str]
         If equal to True / string starting with "T" or "t", e.g. "True" / "1" or 1, save HTML plot
         (if save_png is False, will always save HTML)
     save_png: Union[bool, int, str]
@@ -90,7 +90,7 @@ class RubixHeatmap:
         // 0 (default) or "columns" = per columns : x => x / max(column)
         // 1 or "rows" = per rows : x => x / max(row)
         // None (also any other value except for 0 or 1) = do not scale
-    quantile_for_scaling: Union[int, float]
+    color_scaling_quantile: Union[int, float]
         Quantile for scaling the data to get rid of outliers
     normalize_along: Optional[int]
         // 0 or "columns" = per columns : x => (x - median(column)) / MAD(column)
@@ -176,11 +176,11 @@ class RubixHeatmap:
             metadata_rows_file: Optional[str] = None,
             metadata_cols_file: Optional[str] = None,
             plot_save_path: Optional[str] = None,
-            save_html: Union[bool, int, str] = True,
+            show_html: Union[bool, int, str] = True,
             save_png: Union[bool, int, str] = False,
             png_tool: str = "native",
             scale_along: Optional[int] = 0,
-            quantile_for_scaling: Union[int, float] = 95,
+            color_scaling_quantile: Union[int, float] = 95,
             normalize_along: Optional[int] = None,
             colorbar_title: str = "",
             colorbar_height: Optional[int] = None,
@@ -255,10 +255,10 @@ class RubixHeatmap:
         if self.save_png:
             self.save_html = False
             if (
-                    isinstance(save_html, bool) and save_html
-                    or isinstance(save_html, str) and save_html.lower()[0] == "t"
-                    or isinstance(save_html, str) and save_html == "1"
-                    or isinstance(save_html, int) and save_html == 1
+                    isinstance(show_html, bool) and show_html
+                    or isinstance(show_html, str) and show_html.lower()[0] == "t"
+                    or isinstance(show_html, str) and show_html == "1"
+                    or isinstance(show_html, int) and show_html == 1
             ):
                 self.save_html = True
         else:
@@ -271,7 +271,7 @@ class RubixHeatmap:
             self.scale_along = 1
         else:
             self.scale_along = None
-        self.quantile_for_scaling = quantile_for_scaling
+        self.color_scaling_quantile = color_scaling_quantile
 
         # Set data normalization
         if normalize_along in (0, "columns", "cols"):
@@ -332,10 +332,6 @@ class RubixHeatmap:
         self.metadata_rows = self.read_data(self.metadata_rows, self.metadata_rows_file, 2)
         self.metadata_cols = self.read_data(self.metadata_cols, self.metadata_cols_file, 3)
 
-        # Convert metadata to str just in case
-        # self.metadata_rows = self.metadata_rows.astype(str)
-        # self.metadata_rows = self.metadata_cols.astype(str)
-
         """ DATAPREP """
 
         # Set proper indexes
@@ -351,9 +347,9 @@ class RubixHeatmap:
 
         # Scale and/or normalize data, if required
         if self.scale_along is not None:
-            self.data = self.scale_data(self.data, self.scale_along, self.quantile_for_scaling)
+            self.data = self.scale_data(self.data, self.scale_along, self.color_scaling_quantile)
         if self.normalize_along is not None:
-            self.data = self.normalize_data(self.data, self.normalize_along)
+            self.data = self.normalize_data(self.data, self.normalize_along, self.color_scaling_quantile)
 
         if self.duplicate_metadata_cols is None:
             if len(self.data) <= 70:
@@ -441,7 +437,12 @@ class RubixHeatmap:
         )
         return df
 
-    def scale_data(self, data: pd.DataFrame, scale_along: int, quant: Union[int, float] = 95):
+    def scale_data(
+            self,
+            data: pd.DataFrame,
+            scale_along: int,
+            quant: Union[int, float] = 95
+    ):
         """
         Scale main data along columns (scale_along = 0) or rows (scale_along = 1)
         """
@@ -454,7 +455,12 @@ class RubixHeatmap:
 
         return data.apply(scale, axis=scale_along)
 
-    def normalize_data(self, data: pd.DataFrame, normalize_along: int):
+    def normalize_data(
+            self,
+            data: pd.DataFrame,
+            normalize_along: int,
+            quant: Union[int, float] = 95
+    ):
         """
         Normalize main data along columns (normalize_along = 0) or rows (normalize_along = 1)
         """
@@ -463,8 +469,15 @@ class RubixHeatmap:
             median = np.median(x)
             dev = x - median
             median_abs_dev = np.median(abs(dev))
-            center_reduced = dev / median_abs_dev
-            return center_reduced
+            x = dev / median_abs_dev
+
+            quant_high = 50 + quant / 2
+            quant_low = 50 - quant / 2
+            quantile_high = np.percentile(x, quant_high)
+            quantile_low = np.percentile(x, quant_low)
+            res = x.apply(lambda x: quantile_high if x > quantile_high else (quantile_low if x < quantile_low else x))
+
+            return res
 
         return data.apply(center_reduce, axis=normalize_along)
 

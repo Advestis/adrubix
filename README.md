@@ -34,6 +34,8 @@ Example of a heatmap created using AdRubix:
 
 <img src="https://i.ibb.co/zhqNkjb/rubix-heatmap-example.png" alt="heatmap_example" width="1200" />
 
+### Inputs and output
+
 Three input files (CSV) or pandas DataFrames (in any combination) are expected:
 
 - **Main data** (clusterized by applying, for example, NMTF to raw data).
@@ -78,6 +80,16 @@ With `plot_save_path` specified, HTML and PNG are saved according to it,
 otherwise, HTML only is saved in current working directory to be able to show the plot.
 
 
+### Requirements for saving PNG images
+
+To be able to save plots as PNG files, ideally you should have :
+* [Firefox web browser](https://www.mozilla.org/en-US/firefox/new/)
+and [geckodriver](https://github.com/mozilla/geckodriver/releases) installed on your machine
+* Folders with the executables of Firefox and geckodriver added to your system PATH environment variable
+  - [Adding new locations to system PATH on a Windows machine](https://www.howtogeek.com/118594/how-to-edit-your-system-path-for-easy-command-line-access/)
+  - [Adding new locations to system PATH on a Linux machine](https://www.computerhope.com/issues/ch001647.htm)
+
+
 ### Main parameters
 
 Default values are bolded, where applicable.
@@ -86,19 +98,22 @@ Default values are bolded, where applicable.
    - `data` (DF) or `data_file` (CSV file name)
    - `metadata_rows` (DF) or `metadata_rows_file` (CSV file name)
    - `metadata_cols` (DF) or `metadata_cols_file` (CSV file name)
-   - `data_path` if any of `[...]_file` parameters are used
+   - `data_path` if any of `[...]_file` parameters are used. **Do not forget a slash at the end of the path**.
+     Also, _if you work on a Windows machine, be sure to use double backslashes `\\` instead of single slashes_.
    - `plot_save_path` = path to HTML file to be saved, _including_ its name
      (PNG image will be saved in the same folder under the exact same name except for the extension)
-   - [ optional ] `save_html` = **True**/False or 1/0
+   - [ optional ] `show_html` = **True**/False or 1/0
    - [ optional ] `save_png` = True/**False** or 1/0
 
 
 2. **Data scaling and normalization, dataprep**
-   - [ optional ] `scale_along` = "**columns**"/"rows" or 0/1 for scaling and capping data along the specified axis
-   - [ optional ] `quantile_for_scaling` = quantile for getting rid of outliers, default **0.95**
+   - [ optional ] `scale_along` = "columns"/"rows" or 0/1 for scaling and capping data along the specified axis.
+     Default : **None** = do not normalize.
    - [ optional ] `normalize_along` = "columns"/"rows" or 0/1 for normalizing data along the specified axis :
      `(x - median(x) by column or row) / MAD(x) by column or row`, where `MAD` is median average deviation.
-     Default : **do not normalize**.
+     Default : **None** = do not normalize.
+   - [ optional ] `color_scaling_quantile` = quantile for getting rid of outliers (in %), default **95**.
+     Applicable both to scaling and normalization.
    - [ optional ] `data_rows_to_drop`, `data_cols_to_drop` = names of rows/columns in main data not intended
      to be plotted. Nonexistent names will be skipped without raising an error.
 
@@ -149,7 +164,7 @@ hm = RubixHeatmap(
     metadata_rows_file="meta_rows.csv",
     metadata_cols_file="meta_cols.csv",
     plot_save_path="/home/user/myproject/output/plot.html",
-    save_html=False,
+    show_html=False,
     save_png=True,
     colorbar_title="my colorbar",
     colorbar_location="top",
