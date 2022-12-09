@@ -108,11 +108,13 @@ Default values are bolded, where applicable.
      under the same name except for the extension .png
 
 
-2. **Data scaling and normalization, dataprep**
+2. **Data scaling and normalization + Dataprep**
 
    **NB.** It is still preferred that you do data scaling and/or normalization externally before using `RubixHeatmap`
    in order to have more control and transparency over your data.
 
+   **NB.** If you go for it, for one axis you must choose between `scale_along` and `normalize_along`.
+   You cannot use both simultaneously along the same axis.
 
    - [ optional ] `color_scaling_quantile` = quantile for getting rid of outliers (in %), default **95**,
      accepted 80...100. Applied both to `scale_along` and `normalize_along` options.
@@ -120,12 +122,10 @@ Default values are bolded, where applicable.
      - When applied to `normalize_along`, `color_scaling_quantile=95` will cap both top (> 97.5% quantile)
        and bottom (<2.5% quantile) values before normalizing data (see below).
    - [ optional ] `scale_along` = "columns"/"rows" or 0/1 for scaling and capping data along the specified axis.
-     Default : **None** = do not normalize.
-   - [ optional ] `normalize_along` = "columns"/"rows" or 0/1 for normalizing data along the specified axis :
-     `(x - median(x) by column or row) / MAD(x) by column or row`, where `MAD` is median average deviation.
-     Default : **None** = do not normalize.
-
-
+     Default : **None** = do nothing.
+   - [ optional ] `normalize_along` = "columns"/"rows" or 0/1 for scaling and capping + normalizing data
+     along the specified axis : `(x - median(x) by column or row) / MAD(x) by column or row`,
+     where `MAD` is median average deviation. Default : **None** = do nothing.
    - [ optional ] `data_rows_to_drop`, `data_cols_to_drop` = lists of the names of rows/columns in main data not intended
      to be plotted. Nonexistent names will be skipped without raising an error.
 
