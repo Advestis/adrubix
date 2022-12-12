@@ -81,6 +81,25 @@ With `plot_save_path` specified, HTML and PNG are saved according to it,
 otherwise, HTML only is saved in current working directory to be able to show the plot.
 
 
+### Toolbar
+
+<img src="https://i.ibb.co/QKc2662/rubix-heatmap-toolbar.png" alt="heatmap_example" width="430" />
+
+The image above gives an example of toolbar for **AdRubix** HTML plot.
+It comprises the following Bokeh tools, top to bottom :
+
+* **Box Zoom** (activated by default) : drag & drop to select a rectangular area for zooming in
+* **Pan** : drag to move a zoomed-in image around
+* **Wheel Zoom** : zoom in or out with your mouse wheel
+* **Reset** to the initial view (after any combination of zoom and pan)
+* **Crosshairs** from mouse location (activated by default)
+
+You can activate/deactivate any zoom, pan or crosshairs tool by clicking on it.
+
+**WARNING.** When using `row_labels_for_highlighting` parameter, zoom can only work linked between
+main data and column annotation. With `row_labels_for_highlighting=None`, zoom is always linked between main data
+and both row and column annotations.
+
 ### Requirements for saving PNG images
 
 To be able to save plots as PNG files, ideally you should have :
@@ -140,8 +159,10 @@ Default values are bolded, where applicable.
 4. **Metadata**
    - [ optional ] `show_metadata_rows` = **True**/False
    - [ optional ] `show_metadata_rows_labels` = True/**False**
+     (font size is adapted to main dataframe length and to heatmap height, between 5pt and 10pt)
    - [ optional ] `show_metadata_cols` = **True**/False
-   - [ optional ] `duplicate_metadata_cols` = **True**/False (set automatically to True for DFs longer that 70 rows)
+   - [ optional ] `duplicate_metadata_cols` = True/False/**None**
+     (if None, set automatically to True for DFs longer that 70 rows)
 
 
 5. **Legends**
@@ -162,7 +183,7 @@ Default values are bolded, where applicable.
 
 8. Other
    - [ optional ] `row_labels_for_highlighting` = list of keywords for identifying row labels to be highlighted
-     (in red and italic to the right of the heatmap)
+     (in red and italic to the right of the heatmap). See WARNING in **Toolbar** section.
 
 
 ### Example of usage

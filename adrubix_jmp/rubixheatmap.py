@@ -9,6 +9,8 @@ import holoviews as hv
 from bokeh.layouts import gridplot
 from bokeh.plotting import show, output_file, save
 from bokeh.plotting.figure import Figure
+from bokeh.models import BoxZoomTool, WheelZoomTool, PanTool, ResetTool, CrosshairTool
+# from bokeh.models import ColumnDataSource, HoverTool
 
 import chromedriver_binary
 from bokeh.io import export_png
@@ -228,6 +230,17 @@ class RubixHeatmap:
             "Oranges", "OrRd", "Reds", "YlOrRd",
             "Greys"
         ]
+
+        self.relevant_tools = [
+            BoxZoomTool(),
+            WheelZoomTool(),
+            PanTool(),
+            ResetTool()
+        ]
+        self.relevant_tools_with_crosshair = self.relevant_tools + [CrosshairTool()]
+        # self.relevant_tools_with_crosshair_horiz = self.relevant_tools + [CrosshairTool(dimensions="width")]
+        # self.relevant_tools_with_crosshair_vert = self.relevant_tools + [CrosshairTool(dimensions="height")]
+        # self.relevant_tools_plus = self.relevant_tools + [HoverTool(tooltips=[('index', '$index')])]
 
         """ SET """
 
@@ -767,10 +780,12 @@ class RubixHeatmap:
 
         # Create main data heatmap
         hm_fig = self.plot_main_heatmap(main_width, main_height)
+        hm_fig.tools = self.relevant_tools_with_crosshair
 
         # Create the heatmap of the metadata for rows
         if self.show_metadata_rows:
             metarows_fig = self.plot_metadata_rows(main_height)
+            metarows_fig.tools = self.relevant_tools
             # Linking zoom between main heatmap and metadata for rows only works if there is no rows to highlight
             if not self.rows_to_highlight:
                 metarows_fig.y_range = hm_fig.y_range
@@ -778,20 +793,26 @@ class RubixHeatmap:
         # Create the heatmap of the metadata for columns
         if self.show_metadata_cols:
             metacols_fig = self.plot_metadata_cols(main_width)
+            metacols_fig.tools = self.relevant_tools
             metacols_fig.x_range = hm_fig.x_range
 
         # Create the heatmap of rows legend
         legend_rows_figs = []
         if self.show_rows_legend:
             if self.rows_legend_onecol:
-                legend_rows_figs = [self.plot_rows_legend(main_height)]
+                legend_rows_fig = self.plot_rows_legend(main_height)
+                legend_rows_fig.tools = self.relevant_tools
+                legend_rows_figs = [legend_rows_fig]
             else:
                 for i in range(1, len(self.metadata_rows.columns) + 1):
-                    legend_rows_figs.append(self.plot_rows_legend(main_height, i))
+                    legend_rows_fig = self.plot_rows_legend(main_height, i)
+                    legend_rows_fig.tools = self.relevant_tools
+                    legend_rows_figs.append(legend_rows_fig)
 
         # Create the heatmap of columns legend
         if self.show_cols_legend:
             legend_cols_fig = self.plot_cols_legend(main_width)
+            legend_cols_fig.tools = self.relevant_tools
 
         # Compose the complete plot
         plot_level_one = [None, metacols_fig] + [None] * len(legend_rows_figs)
@@ -807,6 +828,7 @@ class RubixHeatmap:
             ]
         else:
             metacols_fig_double = self.plot_metadata_cols(main_width, invert_yaxis=True)
+            metacols_fig_double.tools = self.relevant_tools
             metacols_fig_double.x_range = hm_fig.x_range
             plot_level_three = [None, metacols_fig_double] + [None] * len(legend_rows_figs)
             plot_children = [
@@ -817,7 +839,6 @@ class RubixHeatmap:
             ]
 
         fig = gridplot(children=plot_children, sizing_mode="stretch_both", toolbar_location="left")
-        # fig.tools = "box_zoom,wheel_zoom,pan,reset"
 
         # Show or save the plot
         if self.plot_save_path is None:
@@ -989,6 +1010,17 @@ class RubixHeatmap:
         fig.xaxis.axis_line_color = None
 
         if self.show_metadata_rows_labels:
+
+            # Adapt font size for metadata rows index following DF length and heatmap height
+            metarows_index_font_size = int(
+                self.heatmap_height * (1137 - 4 * len(self.data)) / 89_000
+            )
+            if metarows_index_font_size < 5:
+                metarows_index_font_size = 5
+            if metarows_index_font_size > 10:
+                metarows_index_font_size = 10
+            fig.yaxis.major_label_text_font_size = f"{metarows_index_font_size}pt"
+
             fig.yaxis.axis_label_text_color = None
             fig.yaxis.axis_line_color = None
             fig.yaxis.axis_line_color = None
