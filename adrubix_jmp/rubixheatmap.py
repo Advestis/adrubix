@@ -384,8 +384,11 @@ class RubixHeatmap:
         self.metadata_cols_codes, self.corr_legend_cols = self.convert_metadata_cols()
 
         # Main data : replace categorical index labels with their locations numbers
-        # (to be compatible with `yticks` option of holoview)
-        self.data_relabeled = self.data.set_index(pd.Index([i for i in range(0, len(self.data))]))
+        # (to be compatible with `yticks` option of holoviews)
+        if self.rows_to_highlight:
+            self.data_relabeled = self.data.set_index(pd.Index([i for i in range(0, len(self.data))]))
+        else:
+            self.data_relabeled = self.data
 
         print("RubixHeatmap object instantiation : SUCCESS")
 
@@ -768,10 +771,14 @@ class RubixHeatmap:
         # Create the heatmap of the metadata for rows
         if self.show_metadata_rows:
             metarows_fig = self.plot_metadata_rows(main_height)
+            # Linking zoom between main heatmap and metadata for rows only works if there is no rows to highlight
+            if not self.rows_to_highlight:
+                metarows_fig.y_range = hm_fig.y_range
 
         # Create the heatmap of the metadata for columns
         if self.show_metadata_cols:
             metacols_fig = self.plot_metadata_cols(main_width)
+            metacols_fig.x_range = hm_fig.x_range
 
         # Create the heatmap of rows legend
         legend_rows_figs = []
@@ -800,6 +807,7 @@ class RubixHeatmap:
             ]
         else:
             metacols_fig_double = self.plot_metadata_cols(main_width, invert_yaxis=True)
+            metacols_fig_double.x_range = hm_fig.x_range
             plot_level_three = [None, metacols_fig_double] + [None] * len(legend_rows_figs)
             plot_children = [
                 plot_level_one,
@@ -809,6 +817,7 @@ class RubixHeatmap:
             ]
 
         fig = gridplot(children=plot_children, sizing_mode="stretch_both", toolbar_location="left")
+        # fig.tools = "box_zoom,wheel_zoom,pan,reset"
 
         # Show or save the plot
         if self.plot_save_path is None:
