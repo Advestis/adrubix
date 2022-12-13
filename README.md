@@ -26,19 +26,25 @@
 [![website](https://img.shields.io/badge/website-Advestis.com-blue)](https://www.advestis.com/)
 [![mail](https://img.shields.io/badge/mail-maintainers-blue)](mailto:afedorov@advestis.com)
 
+
 ## AdRubix
 
-Class creating a **RubixHeatmap** object for plotting rather complex, highly customizable heatmaps with metadata.
+Package allowing to create **RubixHeatmap** objects for plotting complex, highly customizable heatmaps with metadata.
+
+The interest of such a visualization is to highlight clusters in data and to track any patterns vis-à-vis metadata.
 
 Example of a heatmap created using AdRubix:
 
 <img src="https://i.ibb.co/zhqNkjb/rubix-heatmap-example.png" alt="heatmap_example" width="1200" />
 
-### Inputs and output
+
+### Input
 
 Three input files (CSV) or pandas DataFrames (in any combination) are expected:
 
-- **Main data** (clusterized by applying, for example, NMTF to raw data)
+- **Main data**
+  
+   Generally comes clusterized: for example, by applying [AdNMTF](https://pypi.org/project/adnmtf/) to raw data.
   
   - _Example A (see figure above) : rows = genes, columns = cell groups for each patient_
   - _Example B : rows = biomarkers at different timepoints, columns = patients_
@@ -46,17 +52,23 @@ Three input files (CSV) or pandas DataFrames (in any combination) are expected:
 
 - **Metadata for rows**
 
+  Index of these metadata should correspond to the <ins>index</ins> of main data
+  (at least partially, in which case the plot will only keep the matching rows).
+
   - _Example A : column 1 = gene group, column 2 = gene_
   - _Example B : column 1 = timepoint, column 2 = biomarker_
 
 
 - **Metadata for columns**
 
-  - _Example A : row 1 = patient, row 2 = cell type_
-  - _Example B : row 1 = score (Y/N), row 2 = treatment, row 3 = cluster_
+  Index of these metadata should correspond to the <ins>columns</ins> of main data
+  (at least partially, in which case the plot will only keep the matching columns).
 
-The resulting plot is composed of the following elements, all rendered using holoviews.HeatMap().
-Their disposition generally looks like :
+  - _Example A : column 1 = patient, column 2 = cell type_
+  - _Example B : column 1 = score (Y/N), column 2 = treatment, column 3 = cluster_
+
+The resulting plot layout is composed of the following elements, all rendered using `holoviews.HeatMap()`
+and fine-tuned via Bokeh plot parameters :
 
 ```
 ####  [CA]  ####
@@ -73,6 +85,9 @@ Their disposition generally looks like :
 - `[CL]` _column legend_ (CA explained) : optional
 - `####` white space filler
 
+
+### Output
+
 `plot()` method of the class will save :
 - **HTML plot** with an interactive toolbar enabling zooming into main heatmap and metadata
 - **PNG image** corresponding to the HTML plot (without toolbar) : if `save_png` evaluates to True
@@ -81,12 +96,12 @@ With `plot_save_path` specified, HTML and PNG are saved according to it,
 otherwise, HTML only is saved in current working directory to be able to show the plot.
 
 
-### Toolbar
+### HTML toolbar
 
 <img src="https://i.ibb.co/QKc2662/rubix-heatmap-toolbar.png" alt="heatmap_example" width="430" />
 
 The image above gives an example of toolbar for **AdRubix** HTML plot.
-It comprises the following Bokeh tools, top to bottom :
+It comprises the following Bokeh tools, top to bottom:
 
 * **Box Zoom** (activated by default) : drag & drop to select a rectangular area for zooming in
 * **Pan** : drag to move a zoomed-in image around
@@ -97,10 +112,10 @@ It comprises the following Bokeh tools, top to bottom :
 You can activate/deactivate any zoom, pan or crosshairs tool by clicking on it.
 
 **WARNING.** When using `row_labels_for_highlighting` parameter, zoom can only work linked between
-main data and column annotation. With `row_labels_for_highlighting=None`, zoom is always linked between main data
+main data and column annotations. With `row_labels_for_highlighting=None`, zoom is always linked between main data
 and both row and column annotations.
 
-### Requirements for saving PNG images
+### Requirements for saving PNG
 
 To be able to save plots as PNG files, ideally you should have :
 * [Firefox web browser](https://www.mozilla.org/en-US/firefox/new/)

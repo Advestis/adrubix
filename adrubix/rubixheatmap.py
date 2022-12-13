@@ -366,7 +366,7 @@ class RubixHeatmap:
         # Read data & metadata
         self.data = self.read_data(self.data, self.data_file, 1)
         self.metadata_rows = self.read_data(self.metadata_rows, self.metadata_rows_file, 2)
-        self.metadata_cols = self.read_data(self.metadata_cols, self.metadata_cols_file, 3)
+        self.metadata_cols = self.read_data(self.metadata_cols, self.metadata_cols_file, 3).T
 
         """ DATAPREP """
 
