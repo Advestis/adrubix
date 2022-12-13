@@ -5,6 +5,8 @@ import os
 import numpy as np
 import pandas as pd
 
+from more_itertools import intersperse
+
 import holoviews as hv
 from bokeh.layouts import gridplot
 from bokeh.plotting import show, output_file, save
@@ -167,6 +169,16 @@ class RubixHeatmap:
         Names of rows in main data not intended to be plotted (optional). Nonexistent names will be skipped.
     data_cols_to_drop: Optional[list]
         Names of columns in main data not intended to be plotted (optional). Nonexistent names will be skipped.
+    metadata_col_to_split_rows: Optional[str]
+        Insert row separators in the main DF and the metadata-rows DF before plotting,
+        according to the specified column (between groups of labels with identical values).
+        A separator is a row or a group of rows (depending on the DF length and heatmap height)
+        filled with either minimum value for non-normalized data, or median value for normalized one.
+    metadata_row_to_split_cols: Optional[str]
+        Insert column separators in the main DF and the metadata-cols DF before plotting,
+        according to the specified rows (between groups of labels with identical values).
+        A separator is a column or a group of columns (depending on the DF length and heatmap height)
+        filled with either minimum value for non-normalized data, or median value for normalized one.
     """
 
     def __init__(
@@ -213,6 +225,8 @@ class RubixHeatmap:
             columns_label: Optional[str] = None,
             data_rows_to_drop: Optional[list] = None,
             data_cols_to_drop: Optional[list] = None,
+            metadata_col_to_split_rows: Optional[str] = None,
+            metadata_row_to_split_cols: Optional[str] = None
     ) -> None:
 
         # Auxiliary
@@ -278,9 +292,9 @@ class RubixHeatmap:
         else:
             self.save_html = True
 
+        # Set data scaling and normalization
         self.color_scaling_quantile = color_scaling_quantile
 
-        # Set data scaling
         if scale_along in (0, "columns", "cols"):
             self.scale_along = 0
         elif scale_along == (1, "rows"):
@@ -288,7 +302,6 @@ class RubixHeatmap:
         else:
             self.scale_along = None
 
-        # Set data normalization
         if normalize_along in (0, "columns", "cols"):
             self.normalize_along = 0
         elif normalize_along == (1, "rows"):
@@ -337,6 +350,8 @@ class RubixHeatmap:
         self.columns_label = columns_label
         self.data_rows_to_drop = data_rows_to_drop
         self.data_cols_to_drop = data_cols_to_drop
+        self.metadata_col_to_split_rows = metadata_col_to_split_rows
+        self.metadata_row_to_split_cols = metadata_row_to_split_cols
 
         # Set labels for axes
         self.dummy_label = "."  # label for plotting purposes but not intended to be shown on the plot
@@ -368,9 +383,20 @@ class RubixHeatmap:
 
         # Scale and/or normalize data, if required
         if self.scale_along is not None:
-            self.data = self.scale_data(self.data, self.scale_along, self.color_scaling_quantile)
+            self.scale_data()
+
         if self.normalize_along is not None:
-            self.data = self.normalize_data(self.data, self.normalize_along, self.color_scaling_quantile)
+            self.normalize_data()
+
+        # Determine proper separator value
+        if self.normalize_along is not None:
+            self.sep_value = self.data.median().median()
+        else:
+            self.sep_value = self.data.min().min()
+
+        # Insert separators into data, if required
+        if self.metadata_col_to_split_rows is not None or self.metadata_row_to_split_cols is not None:
+            self.split_data()
 
         if self.duplicate_metadata_cols is None:
             if len(self.data) <= 70:
@@ -461,62 +487,6 @@ class RubixHeatmap:
         )
         return df
 
-    def scale_data(
-            self,
-            data: pd.DataFrame,
-            scale_along: int,
-            quant: Union[int, float] = 95
-    ):
-        """
-        Scale main data along columns (scale_along = 0) or rows (scale_along = 1)
-        """
-
-        if quant < 80 or quant > 100:
-            raise ValueError(f"Wrong quantile value: {quant}. Please use percentage from 80 to 100")
-
-        def cap_scale(x):
-            quantile = np.percentile(x, quant)
-            x = x.apply(lambda x: quantile if x > quantile else x)
-            x /= quantile
-            return x
-
-        return data.apply(cap_scale, axis=scale_along)
-
-    def normalize_data(
-            self,
-            data: pd.DataFrame,
-            normalize_along: int,
-            quant: Union[int, float] = 95
-    ):
-        """
-        Normalize main data along columns (normalize_along = 0) or rows (normalize_along = 1)
-        """
-
-        if quant < 80 or quant > 100:
-            raise ValueError(f"Wrong quantile value: {quant}. Please use percentage from 80 to 100")
-
-        def cap_scale(x):
-            quant_high = 50 + quant / 2
-            quant_low = 50 - quant / 2
-            quantile_high = np.percentile(x, quant_high)
-            quantile_low = np.percentile(x, quant_low)
-            x = x.apply(lambda x: quantile_high if x > quantile_high else (quantile_low if x < quantile_low else x))
-            x /= quantile_high
-            return x
-
-        def center_reduce(x):
-            median = np.median(x)
-            dev = x - median
-            median_abs_dev = np.median(abs(dev))
-            x = dev / median_abs_dev
-            x = x.apply(lambda x: 1 if x > 1 else (-1 if x < -1 else x))
-            return x
-
-        data = data.apply(cap_scale, axis=normalize_along)
-        data = data.apply(center_reduce, axis=normalize_along).fillna(0.0)
-
-        return data
-
     def set_proper_indexes(self) -> None:
         """
         If the input DataFrames are not properly indexed yet,
@@ -551,7 +521,7 @@ class RubixHeatmap:
 
         self.data = self.data.astype(float)
 
-    def align_data(self):
+    def align_data(self) -> None:
         """
         Align data with metadata
         """
@@ -560,6 +530,127 @@ class RubixHeatmap:
 
         if len(self.data) == 0 or len(self.data.columns) == 0:
             raise IndexError("Main data and metadata have no rows or no columns in common! Please check your data.")
+
+    def scale_data(self) -> None:
+        """
+        Scale main data along columns (scale_along = 0) or rows (scale_along = 1)
+        """
+        quant = self.color_scaling_quantile
+
+        if quant < 80 or quant > 100:
+            raise ValueError(f"Wrong quantile value: {quant}. Please use percentage from 80 to 100")
+
+        def cap_scale(x):
+            quantile = np.percentile(x, quant)
+            x = x.apply(lambda x: quantile if x > quantile else x)
+            x /= quantile
+            return x
+
+        self.data = self.data.apply(cap_scale, axis=self.scale_along)
+
+    def normalize_data(self) -> None:
+        """
+        Normalize main data along columns (normalize_along = 0) or rows (normalize_along = 1)
+        """
+        quant = self.color_scaling_quantile
+
+        if quant < 80 or quant > 100:
+            raise ValueError(f"Wrong quantile value: {quant}. Please use percentage from 80 to 100")
+
+        def cap_scale(x):
+            quant_high = 50 + quant / 2
+            quant_low = 50 - quant / 2
+            quantile_high = np.percentile(x, quant_high)
+            quantile_low = np.percentile(x, quant_low)
+            x = x.apply(lambda x: quantile_high if x > quantile_high else (quantile_low if x < quantile_low else x))
+            x /= quantile_high
+            return x
+
+        def center_reduce(x):
+            median = np.median(x)
+            dev = x - median
+            median_abs_dev = np.median(abs(dev))
+            x = dev / median_abs_dev
+            x = x.apply(lambda x: 1 if x > 1 else (-1 if x < -1 else x))
+            return x
+
+        self.data = self.data.apply(cap_scale, axis=self.normalize_along)
+        self.data = self.data.apply(center_reduce, axis=self.normalize_along).fillna(0.0)
+
+    def split_data(self):
+        """
+        Insert row and/or column separators in the main DF and the corresponding metadata DF before plotting,
+        according to the specified column or row (between groups of labels with identical values).
+        A separator is a row or column or a group of these (depending on the DF size and heatmap size)
+        filled with either minimum value for non-normalized data, or median value for normalized one.
+        """
+
+        def split_df(
+                df: pd.DataFrame,
+                label: Union[str, int],
+                axis: int
+        ) -> pd.DataFrame:
+            """
+            Split one DataFrame along the specified axis, according to the provided label.
+            """
+
+            mult = int(len(df) / 100)
+            if mult < 1:
+                mult = 1
+
+            if axis == 1:
+                df = df.T
+            elif axis != 0:
+                raise ValueError(f"Wrong 'axis' value: {axis}. Expected: 0 or 1")
+
+            gb = df.groupby(by=label, axis=0)
+            df_split = [gb.get_group(i) for i in gb.groups]
+
+            sep = pd.DataFrame(index=[""] * mult, columns=df.columns, data=[[np.nan] * len(df.columns)] * mult)
+
+            df_split_with_seps = pd.concat(list(intersperse(sep, df_split)), axis=0)
+            if axis == 1:
+                df_split_with_seps = df_split_with_seps.T
+
+            return df_split_with_seps
+
+        # Split along rows
+        if self.metadata_col_to_split_rows is not None:
+
+            data = pd.concat([self.metadata_rows, self.data], axis=1)
+
+            self.metadata_rows = split_df(
+                df=self.metadata_rows,
+                label=self.metadata_col_to_split_rows,
+                axis=0
+            )
+
+            self.data = split_df(
+                df=data,
+                label=self.metadata_col_to_split_rows,
+                axis=0
+            )
+            self.data = self.data.drop(columns=self.metadata_rows.columns)
+
+        # Split along columns
+        if self.metadata_row_to_split_cols is not None:
+
+            data = pd.concat([self.metadata_cols, self.data], axis=0)
+
+            self.metadata_cols = split_df(
+                df=self.metadata_cols,
+                label=self.metadata_row_to_split_cols,
+                axis=1
+            )
+            self.data = split_df(
+                df=data,
+                label=self.metadata_row_to_split_cols,
+                axis=1
+            )
+            self.data = self.data.drop(index=self.metadata_cols.index)
+
+        # Fill NaNs with separator value
+        self.data = self.data.fillna(self.sep_value)
 
     def find_rows_to_highlight(self) -> list:
         """
@@ -600,6 +691,7 @@ class RubixHeatmap:
                 label: pd.Index(self.metadata_rows[col].unique()).get_loc(label)
                 for label in self.metadata_rows[col]
             }
+            mapper[np.nan] = np.nan
             metadata_rows_codes[col] = self.metadata_rows[col].map(mapper)
 
         if stretch_codes:
