@@ -691,6 +691,7 @@ class RubixHeatmap:
                 label: pd.Index(self.metadata_rows[col].unique()).get_loc(label)
                 for label in self.metadata_rows[col]
             }
+            mapper[np.nan] = np.nan
             metadata_rows_codes[col] = self.metadata_rows[col].map(mapper)
 
         if stretch_codes:
