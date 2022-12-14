@@ -429,6 +429,35 @@ class RubixHeatmap:
         else:
             self.data_relabeled = self.data
 
+        # Transform DFs to be plotted to take into account separators, if required
+        def replace_index_duplicates_with_dots(df: pd.DataFrame, axis: int = 0):
+            """
+            When repeated values are found in index, starting from the second occurence,
+            they are replaced with ".", "..", "..." etc.
+            """
+            if axis == 1:
+                df = df.T
+
+            df = df.reset_index()
+            dfgbc = df.groupby(["index"]).cumcount()
+            df["gbc"] = dfgbc.map({i: i * "." for i in range(0, dfgbc.max() + 1)})
+            df["index"] = df["index"].mask(df["gbc"] != "", df["gbc"])
+            df = df.drop("gbc", axis=1).set_index("index")
+
+            if axis == 1:
+                df = df.T
+            return df
+
+        if self.metadata_col_to_split_rows:
+            self.metadata_rows_codes = replace_index_duplicates_with_dots(self.metadata_rows_codes)
+            self.data_relabeled = replace_index_duplicates_with_dots(self.data_relabeled)
+
+        if self.metadata_row_to_split_cols:
+            self.metadata_cols_codes = replace_index_duplicates_with_dots(self.metadata_cols_codes, axis=1)
+            self.data_relabeled = replace_index_duplicates_with_dots(self.data_relabeled, axis=1)
+
+        # TODO (afedorov) : make group/cluster names in legends appear as 1, 2, 3 and not 1.0, 2.0, 3.0 etc.
+
         print("RubixHeatmap object instantiation : SUCCESS")
 
     def read_data(
@@ -649,7 +678,7 @@ class RubixHeatmap:
             self.data = self.data.drop(index=self.metadata_cols.index)
 
         # Fill NaNs with separator value
-        self.data = self.data.fillna(self.sep_value)
+        # self.data = self.data.fillna(self.sep_value)
 
     def find_rows_to_highlight(self) -> list:
         """
@@ -720,6 +749,9 @@ class RubixHeatmap:
         metadata_rows_tmp = self.metadata_rows.copy(deep=True)
         metadata_rows_codes = self.metadata_rows.copy(deep=True)
 
+        metadata_rows_no_sep = self.metadata_rows.copy(deep=True)
+        metadata_rows_no_sep = metadata_rows_no_sep[~metadata_rows_no_sep.index.duplicated(keep=False)]
+
         # Calculate the increment between columns for spreading metadata cols' values along the same colormap.
         # This may be less reasonable compared to metadata rows.
         max_len_unique = 0
@@ -731,12 +763,18 @@ class RubixHeatmap:
         # Spreading metadata rows' values along the same colormap
         i = 0
         for col in metadata_rows_codes.columns:
+            # mapper = {
+            #     label: pd.Index(self.metadata_rows[col].unique()).get_loc(label) + i * incr
+            #     for label in self.metadata_rows[col]
+            # }
             mapper = {
-                label: pd.Index(self.metadata_rows[col].unique()).get_loc(label) + i * incr
-                for label in self.metadata_rows[col]
+                label: pd.Index(metadata_rows_no_sep[col].unique()).get_loc(label) + i * incr
+                for label in metadata_rows_no_sep[col]
             }
-            metadata_rows_codes[col] = self.metadata_rows[col].map(mapper)
+            metadata_rows_codes[col] = metadata_rows_no_sep[col].map(mapper)
             i += 1
+
+        metadata_rows_codes = metadata_rows_codes.reindex(index=self.metadata_rows.index)
 
         # Prepare value-code correspondence DF
         dum_list = []
@@ -755,6 +793,10 @@ class RubixHeatmap:
 
         del corr_list[-1]
         corr_legend_rows = pd.concat(corr_list, axis=0)
+
+        corr_legend_rows = corr_legend_rows[~corr_legend_rows.index.duplicated()]
+        corr_legend_rows = corr_legend_rows[corr_legend_rows.index.notnull()]
+
         corr_legend_rows.index = corr_legend_rows.index.map(str)
 
         return metadata_rows_codes, corr_legend_rows
@@ -766,6 +808,9 @@ class RubixHeatmap:
         """
         metadata_cols_tmp = self.metadata_cols.copy(deep=True)
         metadata_cols_codes = self.metadata_cols.copy(deep=True)
+
+        metadata_cols_no_sep = self.metadata_cols.copy(deep=True)
+        metadata_cols_no_sep = metadata_cols_no_sep.T[~metadata_cols_no_sep.T.index.duplicated(keep=False)].T
 
         # Calculate the increment between rows for spreading metadata rows' values along the same colormap.
         # This is reasonable as normally each row of metadata for columns would not contain many unique values
@@ -779,11 +824,15 @@ class RubixHeatmap:
         # Spreading metadata cols' values along the same colormap
         i = 0
         for row in metadata_cols_codes.index:
+            # mapper = {
+            #     label: pd.Index(self.metadata_cols.loc[row].unique()).get_loc(label) + i * incr
+            #     for label in self.metadata_cols.loc[row]
+            # }
             mapper = {
-                label: pd.Index(self.metadata_cols.loc[row].unique()).get_loc(label) + i * incr
-                for label in self.metadata_cols.loc[row]
+                label: pd.Index(metadata_cols_no_sep.loc[row].unique()).get_loc(label) + i * incr
+                for label in metadata_cols_no_sep.loc[row]
             }
-            metadata_cols_codes.loc[row] = self.metadata_cols.loc[row].map(mapper)
+            metadata_cols_codes.loc[row] = metadata_cols_no_sep.loc[row].map(mapper)
             i += 1
 
         # Prepare value-code correspondence DF
@@ -810,6 +859,10 @@ class RubixHeatmap:
 
         del corr_list[-1]
         corr_legend_cols = pd.concat(corr_list, axis=1)
+
+        corr_legend_cols = corr_legend_cols.T[~corr_legend_cols.T.index.duplicated()].T
+        corr_legend_cols = corr_legend_cols.T[corr_legend_cols.T.index.notnull()].T
+
         corr_legend_cols.columns = corr_legend_cols.columns.map(str)
 
         return metadata_cols_codes, corr_legend_cols
@@ -1060,6 +1113,7 @@ class RubixHeatmap:
             )
 
         fig = hv.render(hm)
+        fig.outline_line_color = None
         fig.yaxis.axis_line_color = None
         fig.yaxis.axis_label_text_color = "white"
         fig.yaxis.major_label_text_font_style = "italic"
@@ -1099,6 +1153,7 @@ class RubixHeatmap:
             metarows.opts(yaxis=None)
 
         fig = hv.render(metarows)
+        fig.outline_line_color = None
         fig.xaxis.axis_label_text_font_style = self.axes_labels_style
         fig.xaxis.axis_line_color = None
 
@@ -1156,6 +1211,7 @@ class RubixHeatmap:
             metacols.opts(invert_yaxis=True)
 
         fig = hv.render(metacols)
+        fig.outline_line_color = None
         fig.yaxis.axis_label_text_font_style = self.axes_labels_style
         fig.yaxis.axis_line_color = None
 
