@@ -624,7 +624,6 @@ class RubixHeatmap:
                 label=self.metadata_col_to_split_rows,
                 axis=0
             )
-
             self.data = split_df(
                 df=data,
                 label=self.metadata_col_to_split_rows,
