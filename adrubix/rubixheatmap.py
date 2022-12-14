@@ -755,6 +755,7 @@ class RubixHeatmap:
 
         del corr_list[-1]
         corr_legend_rows = pd.concat(corr_list, axis=0)
+        corr_legend_rows.index = corr_legend_rows.index.map(str)
 
         return metadata_rows_codes, corr_legend_rows
 
@@ -809,6 +810,7 @@ class RubixHeatmap:
 
         del corr_list[-1]
         corr_legend_cols = pd.concat(corr_list, axis=1)
+        corr_legend_cols.columns = corr_legend_cols.columns.map(str)
 
         return metadata_cols_codes, corr_legend_cols
 
@@ -1104,7 +1106,7 @@ class RubixHeatmap:
 
             # Adapt font size for metadata rows index following DF length and heatmap height
             metarows_index_font_size = int(
-                self.heatmap_height * (1137 - 4 * len(self.data)) / 89_000
+                main_height * (1137 - 4 * len(self.data)) / 89_000
             )
             if metarows_index_font_size < 5:
                 metarows_index_font_size = 5
@@ -1227,6 +1229,22 @@ class RubixHeatmap:
         else:
             fig.yaxis.axis_label_text_color = None
             fig.yaxis.axis_line_color = None
+
+        # Adapt font size for rows legend index following DF length and heatmap height
+        if self.rows_legend_onecol:
+            len_data = len(self.corr_legend_rows_onecol["code"].unique())
+        else:
+            len_data = len(self.corr_legend_rows[mrcol].unique())
+
+        rows_legend_index_font_size = int(
+            main_height * (1137 - 4 * len_data) / 89_000
+        )
+        if rows_legend_index_font_size < 5:
+            rows_legend_index_font_size = 5
+        if rows_legend_index_font_size > 10:
+            rows_legend_index_font_size = 10
+
+        fig.yaxis.major_label_text_font_size = f"{rows_legend_index_font_size}pt"
 
         fig.yaxis.axis_line_color = None
         fig.yaxis.major_tick_out = 0
