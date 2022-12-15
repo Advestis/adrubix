@@ -713,14 +713,17 @@ class RubixHeatmap:
         metadata_rows_tmp = self.metadata_rows.copy(deep=True)
         metadata_rows_codes = self.metadata_rows.copy(deep=True)
 
+        metadata_rows_no_sep = self.metadata_rows.copy(deep=True)
+        metadata_rows_no_sep = metadata_rows_no_sep[~metadata_rows_no_sep.index.duplicated(keep=False)]
+
         # Substitute categorical values to numerical codes (row numbers)
         for col in self.metadata_rows.columns:
             mapper = {
-                label: pd.Index(self.metadata_rows[col].unique()).get_loc(label)
-                for label in self.metadata_rows[col]
+                label: pd.Index(metadata_rows_no_sep[col].unique()).get_loc(label)
+                for label in metadata_rows_no_sep[col]
             }
             mapper[np.nan] = np.nan
-            metadata_rows_codes[col] = self.metadata_rows[col].map(mapper)
+            metadata_rows_codes[col] = metadata_rows_no_sep[col].map(mapper)
 
         if stretch_codes:
             max_outer = metadata_rows_codes.iloc[:, -1].max()
@@ -735,8 +738,18 @@ class RubixHeatmap:
         # Prepare value-code correspondence DFs
         corr_legend_rows = {}
         for mrcol in self.metadata_rows.columns:
+
             metadata_rows_tmp[f"{mrcol}_code"] = metadata_rows_codes[mrcol]
             corr_legend_rows[mrcol] = metadata_rows_tmp[[mrcol, f"{mrcol}_code"]].drop_duplicates().set_index(mrcol)
+
+            corr_legend_rows[mrcol] = corr_legend_rows[mrcol][~corr_legend_rows[mrcol].index.duplicated()]
+            corr_legend_rows[mrcol] = corr_legend_rows[mrcol][corr_legend_rows[mrcol].index.notnull()]
+
+            def remove_dot_zero(txt: str) -> str:
+                if txt.endswith(".0"):
+                    txt = txt.replace(".0", "")
+                return txt
+            corr_legend_rows[mrcol].index = corr_legend_rows[mrcol].index.map(str).map(remove_dot_zero)
 
         return metadata_rows_codes, corr_legend_rows
 
@@ -763,10 +776,6 @@ class RubixHeatmap:
         # Spreading metadata rows' values along the same colormap
         i = 0
         for col in metadata_rows_codes.columns:
-            # mapper = {
-            #     label: pd.Index(self.metadata_rows[col].unique()).get_loc(label) + i * incr
-            #     for label in self.metadata_rows[col]
-            # }
             mapper = {
                 label: pd.Index(metadata_rows_no_sep[col].unique()).get_loc(label) + i * incr
                 for label in metadata_rows_no_sep[col]
@@ -797,7 +806,11 @@ class RubixHeatmap:
         corr_legend_rows = corr_legend_rows[~corr_legend_rows.index.duplicated()]
         corr_legend_rows = corr_legend_rows[corr_legend_rows.index.notnull()]
 
-        corr_legend_rows.index = corr_legend_rows.index.map(str)
+        def remove_dot_zero(txt: str) -> str:
+            if txt.endswith(".0"):
+                txt = txt.replace(".0", "")
+            return txt
+        corr_legend_rows.index = corr_legend_rows.index.map(str).map(remove_dot_zero)
 
         return metadata_rows_codes, corr_legend_rows
 
@@ -824,10 +837,6 @@ class RubixHeatmap:
         # Spreading metadata cols' values along the same colormap
         i = 0
         for row in metadata_cols_codes.index:
-            # mapper = {
-            #     label: pd.Index(self.metadata_cols.loc[row].unique()).get_loc(label) + i * incr
-            #     for label in self.metadata_cols.loc[row]
-            # }
             mapper = {
                 label: pd.Index(metadata_cols_no_sep.loc[row].unique()).get_loc(label) + i * incr
                 for label in metadata_cols_no_sep.loc[row]
@@ -1290,7 +1299,7 @@ class RubixHeatmap:
         if self.rows_legend_onecol:
             len_data = len(self.corr_legend_rows_onecol["code"].unique())
         else:
-            len_data = len(self.corr_legend_rows[mrcol].unique())
+            len_data = len(self.corr_legend_rows[mrcol].iloc[:, 0].unique())
 
         rows_legend_index_font_size = int(
             main_height * (1137 - 4 * len_data) / 89_000
