@@ -196,9 +196,16 @@ Default values are bolded, where applicable.
      If neither is specified, plot dimensions will be proportional to the DF size (6 screen pixels per row or column).
 
 
-8. Other
+8. **Plot enhancement**
    - [ optional ] `row_labels_for_highlighting` = list of keywords for identifying row labels to be highlighted
      (in red and italic to the right of the heatmap). See WARNING in **Toolbar** section.
+   - [ optional ] `metadata_col_to_split_rows` = insert row separators in the main DF and the metadata-rows DF
+     before plotting, according to the specified column (between groups of labels with identical values).
+   - [ optional ] `metadata_row_to_split_cols` = insert column separators in the main DF and the metadata-cols DF
+     before plotting, according to the specified rows (between groups of labels with identical values).
+
+    A separator is a row or column or a group of rows or columns (depending on the DF size and heatmap size)
+    filled with NaNs to be plotted in white.
 
 
 ### Example of usage
@@ -222,7 +229,9 @@ hm = RubixHeatmap(
     heatmap_width=1500,
     heatmap_height=1000,
     data_rows_to_drop=["useless_row_1", "useless_row_2"],
-    row_labels_for_highlighting=["row_keyword_A", "row_keyword_B"]
+    row_labels_for_highlighting=["row_keyword_A", "row_keyword_B"],
+    metadata_col_to_split_rows="Group",
+    metadata_row_to_split_cols="Subject"
 )
 hm.plot()
 ```

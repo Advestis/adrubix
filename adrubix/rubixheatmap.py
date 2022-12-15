@@ -612,6 +612,8 @@ class RubixHeatmap:
         filled with either minimum value for non-normalized data, or median value for normalized one.
         """
 
+        main_width, main_height = self.get_plot_size()
+
         def split_df(
                 df: pd.DataFrame,
                 label: Union[str, int],
@@ -623,10 +625,14 @@ class RubixHeatmap:
 
             if axis == 1:
                 df = df.T
-            elif axis != 0:
+                plot_size_factor = main_width / 1400
+            elif axis == 0:
+                plot_size_factor = main_height / 1000
+            else:
                 raise ValueError(f"Wrong 'axis' value: {axis}. Expected: 0 or 1")
 
             mult = round(len(df) / 100)
+            mult = round(mult / plot_size_factor)
             if mult < 1:
                 mult = 1
 
@@ -876,15 +882,10 @@ class RubixHeatmap:
 
         return metadata_cols_codes, corr_legend_cols
 
-    def plot(self) -> None:
+    def get_plot_size(self) -> Tuple[int, int]:
         """
-        Draw and show the heatmap + the additional elements:
-        row annotations, column annotations, rows legend, columns legend
+        Get main heatmap size in pixels depending on the specified parameters
         """
-
-        metarows_fig = None
-        metacols_fig = None
-        legend_cols_fig = None
 
         # Main heatmap dimensions by default
         main_height = self.pixel_size * len(self.data)
@@ -932,6 +933,20 @@ class RubixHeatmap:
                 f"WARNING : invalid `heatmap_height` value ('{self.heatmap_height}'). "
                 f"Expected : int or 'proportional'. Default value (multiple of pixel size) will be used."
             )
+
+        return main_width, main_height
+
+    def plot(self) -> None:
+        """
+        Draw and show the heatmap + the additional elements:
+        row annotations, column annotations, rows legend, columns legend
+        """
+
+        metarows_fig = None
+        metacols_fig = None
+        legend_cols_fig = None
+
+        main_width, main_height = self.get_plot_size()
 
         # Create main data heatmap
         hm_fig = self.plot_main_heatmap(main_width, main_height)
