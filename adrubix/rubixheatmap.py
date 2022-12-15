@@ -623,14 +623,14 @@ class RubixHeatmap:
             Split one DataFrame along the specified axis, according to the provided label.
             """
 
-            mult = int(len(df) / 100)
-            if mult < 1:
-                mult = 1
-
             if axis == 1:
                 df = df.T
             elif axis != 0:
                 raise ValueError(f"Wrong 'axis' value: {axis}. Expected: 0 or 1")
+
+            mult = round(len(df) / 100)
+            if mult < 1:
+                mult = 1
 
             gb = df.groupby(by=label, axis=0)
             df_split = [gb.get_group(i) for i in gb.groups]
