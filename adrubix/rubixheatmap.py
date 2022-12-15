@@ -129,6 +129,8 @@ class RubixHeatmap:
         Main colormap name, must be known by holoviews (default "coolwarm" / "YlOrRd" for non-negative data).
         Ref. 1 https://holoviews.org/user_guide/Colormaps.html#perceptually-uniform-sequential-colormaps
         Ref. 2 https://holoviews.org/user_guide/Colormaps.html#diverging-colormaps
+    nan_color: str
+        Hex color string "#xxxxxx" or named HTML color for filling NaN values in the main heatmap (default "white")
     colormap_metarows: str
         Colormap for row annotations, must be known by holoviews (default "Glasbey").
         Ref. https://holoviews.org/user_guide/Colormaps.html#categorical-colormaps
@@ -179,6 +181,11 @@ class RubixHeatmap:
         according to the specified rows (between groups of labels with identical values).
         A separator is a column or a group of columns (depending on the DF length and heatmap height)
         filled with either minimum value for non-normalized data, or median value for normalized one.
+    fill_seps_with: str
+        // "nan" (default) = with NaNs (white color)
+        // "min" = with mininum value of the DF (color will depend on the colormap)
+        // "median" = with median value of the DF (color will depend on the colormap)
+        // "adapt" = with mininum value of the DF if data normalisation is not called, median value if called
     """
 
     def __init__(
@@ -209,6 +216,7 @@ class RubixHeatmap:
             rows_legend_onecol: bool = True,
             show_cols_legend: bool = True,
             colormap_main: str = "coolwarm",
+            nan_color: str = "white",
             colormap_metarows: str = "glasbey",
             colormap_metacols: str = "Category20",
             axes_labels_style: str = "bold",
@@ -226,7 +234,8 @@ class RubixHeatmap:
             data_rows_to_drop: Optional[list] = None,
             data_cols_to_drop: Optional[list] = None,
             metadata_col_to_split_rows: Optional[str] = None,
-            metadata_row_to_split_cols: Optional[str] = None
+            metadata_row_to_split_cols: Optional[str] = None,
+            fill_seps_with: str = "nan"
     ) -> None:
 
         # Auxiliary
@@ -330,6 +339,8 @@ class RubixHeatmap:
         self.colorbar_location = colorbar_location
         self.show_colorbar = show_colorbar
         self.colormap_main = colormap_main
+        self.nan_color = nan_color
+        self.fill_seps_with = fill_seps_with
         self.colormap_metarows = colormap_metarows
         self.colormap_metacols = colormap_metacols
 
@@ -389,10 +400,22 @@ class RubixHeatmap:
             self.normalize_data()
 
         # Determine proper separator value
-        if self.normalize_along is not None:
+        if self.fill_seps_with == "adapt":
+            if self.normalize_along is not None:
+                self.sep_value = self.data.median().median()
+            else:
+                self.sep_value = self.data.min().min()
+        elif self.fill_seps_with == "nan":
+            self.sep_value = np.nan
+        elif self.fill_seps_with == "min":
+            self.sep_value = self.data.min().min()
+        elif self.fill_seps_with == "median":
             self.sep_value = self.data.median().median()
         else:
-            self.sep_value = self.data.min().min()
+            raise ValueError(
+                f"Wrong `fill_seps_with` value: {self.fill_seps_with}."
+                "Expected : 'nan', 'main', 'median' or 'adapt'"
+            )
 
         # Insert separators into data, if required
         if self.metadata_col_to_split_rows is not None or self.metadata_row_to_split_cols is not None:
@@ -617,7 +640,8 @@ class RubixHeatmap:
         def split_df(
                 df: pd.DataFrame,
                 label: Union[str, int],
-                axis: int
+                axis: int,
+                sep_value: Union[float, str] = np.nan
         ) -> pd.DataFrame:
             """
             Split one DataFrame along the specified axis, according to the provided label.
@@ -639,7 +663,7 @@ class RubixHeatmap:
             gb = df.groupby(by=label, axis=0)
             df_split = [gb.get_group(i) for i in gb.groups]
 
-            sep = pd.DataFrame(index=[""] * mult, columns=df.columns, data=[[np.nan] * len(df.columns)] * mult)
+            sep = pd.DataFrame(index=[""] * mult, columns=df.columns, data=[[sep_value] * len(df.columns)] * mult)
 
             df_split_with_seps = pd.concat(list(intersperse(sep, df_split)), axis=0)
             if axis == 1:
@@ -660,7 +684,8 @@ class RubixHeatmap:
             self.data = split_df(
                 df=data,
                 label=self.metadata_col_to_split_rows,
-                axis=0
+                axis=0,
+                sep_value="#sep#"
             )
             self.data = self.data.drop(columns=self.metadata_rows.columns)
 
@@ -677,12 +702,13 @@ class RubixHeatmap:
             self.data = split_df(
                 df=data,
                 label=self.metadata_row_to_split_cols,
-                axis=1
+                axis=1,
+                sep_value="#sep#"
             )
             self.data = self.data.drop(index=self.metadata_cols.index)
 
-        # Fill NaNs with separator value
-        # self.data = self.data.fillna(self.sep_value)
+        # Fill separators with proper value
+        self.data = self.data.replace("#sep#", self.sep_value)
 
     def find_rows_to_highlight(self) -> list:
         """
@@ -802,6 +828,11 @@ class RubixHeatmap:
             metadata_rows_tmp[f"{col}_code"] = metadata_rows_codes[col]
             corr = metadata_rows_tmp.loc[:, [col, f"{col}_code"]].T.drop_duplicates().T.set_index(col)
             corr.rename(columns={f"{col}_code": "code"}, inplace=True)
+            if np.nan in corr.index:
+                try:
+                    corr = corr.drop([np.nan], axis=0)
+                except KeyError:
+                    pass
 
             corr_list.append(corr)
             corr_list.append(dum_list[metadata_rows_codes.columns.get_loc(col)])
@@ -862,10 +893,19 @@ class RubixHeatmap:
             metadata_cols_tmp.loc[f"{row}_code"] = metadata_cols_codes.loc[row]
             corr = metadata_cols_tmp.loc[[row, f"{row}_code"]].T.drop_duplicates().set_index(row).T
             corr.rename(index={f"{row}_code": "code"}, inplace=True)
+            if np.nan in corr.columns:
+                try:
+                    corr = corr.drop([np.nan], axis=1)
+                except KeyError:
+                    pass
 
             if self.proper_labels_for_metadata_cols_legend:
                 corr.rename(
-                    columns={val: f"{self.proper_labels_for_metadata_cols_legend[row]}{val}" for val in corr.columns},
+                    columns={
+                        val: f"{self.proper_labels_for_metadata_cols_legend[row]}{val}"
+                        for val in corr.columns
+                        if val != np.nan
+                    },
                     inplace=True
                 )
 
@@ -878,7 +918,11 @@ class RubixHeatmap:
         corr_legend_cols = corr_legend_cols.T[~corr_legend_cols.T.index.duplicated()].T
         corr_legend_cols = corr_legend_cols.T[corr_legend_cols.T.index.notnull()].T
 
-        corr_legend_cols.columns = corr_legend_cols.columns.map(str)
+        def remove_dot_zero(txt: str) -> str:
+            if txt.endswith(".0"):
+                txt = txt.replace(".0", "")
+            return txt
+        corr_legend_cols.columns = corr_legend_cols.columns.map(str).map(remove_dot_zero)
 
         return metadata_cols_codes, corr_legend_cols
 
@@ -1111,30 +1155,25 @@ class RubixHeatmap:
             [self.data_columns_label, self.dummy_label], self.z_axis_label
         )
 
+        hm.opts(
+            cmap=self.colormap_main,
+            colorbar=self.show_colorbar,
+            colorbar_opts=colorbar_opts,
+            frame_width=main_width,
+            frame_height=main_height,
+            xaxis=None,
+            invert_yaxis=True,
+            clipping_colors={"NaN": self.nan_color}
+        )
+
         # Highlight specified rows, or not if nothing to highlight
         if self.rows_to_highlight:
             hm.opts(
-                cmap=self.colormap_main,
-                colorbar=self.show_colorbar,
-                colorbar_opts=colorbar_opts,
-                frame_width=main_width,
-                frame_height=main_height,
-                xaxis=None,
-                invert_yaxis=True,
                 yaxis="right",
                 yticks=[(self.data.index.get_loc(label), label) for label in self.rows_to_highlight]
             )
         else:
-            hm.opts(
-                cmap=self.colormap_main,
-                colorbar=self.show_colorbar,
-                colorbar_opts=colorbar_opts,
-                frame_width=main_width,
-                frame_height=main_height,
-                xaxis=None,
-                invert_yaxis=True,
-                yaxis=None
-            )
+            hm.opts(yaxis=None)
 
         fig = hv.render(hm)
         fig.outline_line_color = None
