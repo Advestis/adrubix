@@ -456,8 +456,6 @@ class RubixHeatmap:
             self.metadata_cols_codes = replace_index_duplicates_with_dots(self.metadata_cols_codes, axis=1)
             self.data_relabeled = replace_index_duplicates_with_dots(self.data_relabeled, axis=1)
 
-        # TODO (afedorov) : make group/cluster names in legends appear as 1, 2, 3 and not 1.0, 2.0, 3.0 etc.
-
         print("RubixHeatmap object instantiation : SUCCESS")
 
     def read_data(
@@ -750,6 +748,8 @@ class RubixHeatmap:
                     txt = txt.replace(".0", "")
                 return txt
             corr_legend_rows[mrcol].index = corr_legend_rows[mrcol].index.map(str).map(remove_dot_zero)
+
+        # TODO (afedorov) : make multicol rows legend display correct colors
 
         return metadata_rows_codes, corr_legend_rows
 
