@@ -52,7 +52,7 @@ Three input files (CSV) or pandas DataFrames (in any combination) are expected:
 
 - **Metadata for rows**
 
-  Index of these metadata should correspond to the <ins>index</ins> of main data
+  Index of these metadata should correspond to the **index** of main data
   (at least partially, in which case the plot will only keep the matching rows).
 
   - _Example A : column 1 = gene group, column 2 = gene_
@@ -61,7 +61,7 @@ Three input files (CSV) or pandas DataFrames (in any combination) are expected:
 
 - **Metadata for columns**
 
-  Index of these metadata should correspond to the <ins>columns</ins> of main data
+  Index of these metadata should correspond to the **columns** of main data
   (at least partially, in which case the plot will only keep the matching columns).
 
   - _Example A : column 1 = patient, column 2 = cell type_
@@ -97,6 +97,7 @@ otherwise, HTML only is saved in current working directory to be able to show th
 
 
 ### HTML toolbar
+
 
 <img src="https://i.ibb.co/QKc2662/rubix-heatmap-toolbar.png" alt="heatmap_example" width="430" />
 
