@@ -35,7 +35,7 @@ The interest of such a visualization is to highlight clusters in data and to tra
 
 Example of a heatmap created using AdRubix:
 
-<img src="https://i.ibb.co/zhqNkjb/rubix-heatmap-example.png" alt="heatmap_example" width="1200" />
+<img src="https://i.ibb.co/yVyGBbR/Ad-Rubix-advanced-JMP-sep.png" alt="heatmap_example" width="1200" />
 
 
 ### Input
@@ -189,7 +189,7 @@ Default values are bolded, where applicable.
    - [ optional ] `colormap_main` (default "**coolwarm**" / "**YlOrRd**" for non-negative data)
    - [ optional ] `colormap_metarows` (default "**Glasbey**")
    - [ optional ] `colormap_metacols` (default "**Category20**")
-   - [ optional ] `nan_color` (default "**white**") = hex color string "#xxxxxx" or named HTML color
+   - [ optional ] `nan_color` (default "**black**") = hex color string "#xxxxxx" or named HTML color
      for filling NaN values in the main heatmap
    - [ optional ] `sep_color` (default "**white**") = hex color string "#xxxxxx" or named HTML color
      for filling separators in the main heatmap
