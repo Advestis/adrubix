@@ -130,7 +130,9 @@ class RubixHeatmap:
         Ref. 1 https://holoviews.org/user_guide/Colormaps.html#perceptually-uniform-sequential-colormaps
         Ref. 2 https://holoviews.org/user_guide/Colormaps.html#diverging-colormaps
     nan_color: str
-        Hex color string "#xxxxxx" or named HTML color for filling NaN values in the main heatmap (default "white")
+        Hex color string "#xxxxxx" or named HTML color for filling NaN values in the main heatmap (default "black")
+    sep_color: str
+        Hex color string "#xxxxxx" or named HTML color for filling separators in the main heatmap (default "white")
     colormap_metarows: str
         Colormap for row annotations, must be known by holoviews (default "Glasbey").
         Ref. https://holoviews.org/user_guide/Colormaps.html#categorical-colormaps
@@ -181,8 +183,8 @@ class RubixHeatmap:
         according to the specified rows (between groups of labels with identical values).
         A separator is a column or a group of columns (depending on the DF length and heatmap height)
         filled with either minimum value for non-normalized data, or median value for normalized one.
-    fill_seps_with: str
-        // "nan" (default) = with NaNs (white color)
+    sep_value: str
+        // None (default) = separators will be plotted in `sep_color` (default "white")
         // "min" = with mininum value of the DF (color will depend on the colormap)
         // "median" = with median value of the DF (color will depend on the colormap)
         // "adapt" = with mininum value of the DF if data normalisation is not called, median value if called
@@ -216,7 +218,8 @@ class RubixHeatmap:
             rows_legend_onecol: bool = True,
             show_cols_legend: bool = True,
             colormap_main: str = "coolwarm",
-            nan_color: str = "white",
+            nan_color: str = "black",
+            sep_color: str = "white",
             colormap_metarows: str = "glasbey",
             colormap_metacols: str = "Category20",
             axes_labels_style: str = "bold",
@@ -235,7 +238,7 @@ class RubixHeatmap:
             data_cols_to_drop: Optional[list] = None,
             metadata_col_to_split_rows: Optional[str] = None,
             metadata_row_to_split_cols: Optional[str] = None,
-            fill_seps_with: str = "nan"
+            sep_value: Optional[str] = None
     ) -> None:
 
         # Auxiliary
@@ -340,7 +343,8 @@ class RubixHeatmap:
         self.show_colorbar = show_colorbar
         self.colormap_main = colormap_main
         self.nan_color = nan_color
-        self.fill_seps_with = fill_seps_with
+        self.sep_color = sep_color
+        self.sep_value = sep_value
         self.colormap_metarows = colormap_metarows
         self.colormap_metacols = colormap_metacols
 
@@ -400,22 +404,26 @@ class RubixHeatmap:
             self.normalize_data()
 
         # Determine proper separator value
-        if self.fill_seps_with == "adapt":
+        if self.sep_value == "adapt":
             if self.normalize_along is not None:
                 self.sep_value = self.data.median().median()
             else:
-                self.sep_value = self.data.min().min()
-        elif self.fill_seps_with == "nan":
-            self.sep_value = np.nan
-        elif self.fill_seps_with == "min":
+                if self.data.min().min() >= 0:
+                    self.sep_value = self.data.min().min()
+                else:
+                    self.sep_value = self.data.median().median()
+
+        elif self.sep_value == "min":
             self.sep_value = self.data.min().min()
-        elif self.fill_seps_with == "median":
+
+        elif self.sep_value == "median":
             self.sep_value = self.data.median().median()
+
+        elif self.sep_value is None:
+            self.sep_value = np.inf
+
         else:
-            raise ValueError(
-                f"Wrong `fill_seps_with` value: {self.fill_seps_with}."
-                "Expected : 'nan', 'main', 'median' or 'adapt'"
-            )
+            raise ValueError(f"Wrong `sep_value`: {self.sep_value}. Expected : 'nan', 'main', 'median' or 'adapt'")
 
         # Insert separators into data, if required
         if self.metadata_col_to_split_rows is not None or self.metadata_row_to_split_cols is not None:
@@ -435,15 +443,15 @@ class RubixHeatmap:
         ):
             self.colormap_main = "YlOrRd"
 
-        # Pick important rows to be highlighted at the plot
-        self.rows_to_highlight = self.find_rows_to_highlight()
-
         # Row & column annotations: convert categorical values into integer codes
         if self.rows_legend_onecol:
             self.metadata_rows_codes, self.corr_legend_rows_onecol = self.convert_metadata_rows_onecol()
         else:
             self.metadata_rows_codes, self.corr_legend_rows = self.convert_metadata_rows()
         self.metadata_cols_codes, self.corr_legend_cols = self.convert_metadata_cols()
+
+        # Pick important rows to be highlighted at the plot
+        self.rows_to_highlight = self.find_rows_to_highlight()
 
         # Main data : replace categorical index labels with their locations numbers
         # (to be compatible with `yticks` option of holoviews)
@@ -1163,7 +1171,7 @@ class RubixHeatmap:
             frame_height=main_height,
             xaxis=None,
             invert_yaxis=True,
-            clipping_colors={"NaN": self.nan_color}
+            clipping_colors={"NaN": self.nan_color, "max": self.sep_color}
         )
 
         # Highlight specified rows, or not if nothing to highlight

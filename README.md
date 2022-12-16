@@ -189,6 +189,14 @@ Default values are bolded, where applicable.
    - [ optional ] `colormap_main` (default "**coolwarm**" / "**YlOrRd**" for non-negative data)
    - [ optional ] `colormap_metarows` (default "**Glasbey**")
    - [ optional ] `colormap_metacols` (default "**Category20**")
+   - [ optional ] `nan_color` (default "**white**") = hex color string "#xxxxxx" or named HTML color
+     for filling NaN values in the main heatmap
+   - [ optional ] `sep_color` (default "**white**") = hex color string "#xxxxxx" or named HTML color
+     for filling separators in the main heatmap
+   - [ optional ] `sep_value` = **None** / "min" / "median" / "adapt"
+     = plot separators filled with `sep_color`, or color corresponding to the mininum value of the DF,
+     or that corresponding to the median value of the DF, respectively. "adapt" will try to choose between
+     "min" and "median", depending on data range and normalization.
 
 
 7. **Plot dimensions** (in terms of the main heatmap)
@@ -212,10 +220,13 @@ Default values are bolded, where applicable.
 
 ```python
 from adrubix import RubixHeatmap
+import pandas as pd
+
+main_data = pd.DataFrame(index=[...], columns=[...], data=[...])
 
 hm = RubixHeatmap(
     data_path="/home/user/myproject/data/",
-    data_file="main_data.csv",
+    data=main_data,
     metadata_rows_file="meta_rows.csv",
     metadata_cols_file="meta_cols.csv",
     plot_save_path="/home/user/myproject/output/plot.html",
@@ -225,13 +236,17 @@ hm = RubixHeatmap(
     colorbar_location="top",
     show_metadata_rows_labels=True,
     show_rows_legend=False,
+    # duplicate_metadata_cols=False,
     colormap_main="fire",
     heatmap_width=1500,
-    heatmap_height=1000,
+    heatmap_height="proportional",
     data_rows_to_drop=["useless_row_1", "useless_row_2"],
     row_labels_for_highlighting=["row_keyword_A", "row_keyword_B"],
     metadata_col_to_split_rows="Group",
-    metadata_row_to_split_cols="Subject"
+    metadata_row_to_split_cols="Subject",
+    nan_color="orange",
+    sep_color="green",
+    # sep_value="median"
 )
 hm.plot()
 ```
