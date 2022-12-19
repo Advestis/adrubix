@@ -186,7 +186,17 @@ Default values are bolded, where applicable.
    - [ optional ] `show_cols_legend` = **True**/False
 
 
-6. **Colormaps** (must be known by **holoviews**)
+6. **Plot dimensions** (in terms of the main heatmap)
+   - [ optional ] `heatmap_width`, `heatmap_height` : either sizes in pixels, or one size and the other "proportional".
+     If neither is specified, plot dimensions will be proportional to the DF size (6 screen pixels per row or column).
+
+
+7. **Colormaps** (must be known by **holoviews**)
+
+   **NB.** A _separator_ is a row or column or a group of rows or columns (depending on the DF size and heatmap size)
+    inserted in the main dataframe to be plotted in a specified color in order to visually separate meaningful blocks
+    of data.
+
    - [ optional ] `colormap_main` (default "**coolwarm**" / "**YlOrRd**" for non-negative data)
    - [ optional ] `colormap_metarows` (default "**Glasbey**")
    - [ optional ] `colormap_metacols` (default "**Category20**")
@@ -195,26 +205,18 @@ Default values are bolded, where applicable.
    - [ optional ] `sep_color` (default "**white**") = hex color string "#xxxxxx" or named HTML color
      for filling separators in the main heatmap
    - [ optional ] `sep_value` = **None** / "min" / "median" / "adapt"
-     = plot separators filled with `sep_color`, or color corresponding to the mininum value of the DF,
-     or that corresponding to the median value of the DF, respectively. "adapt" will try to choose between
+     = plot separators filled with `sep_color` / with color corresponding to the mininum value of the DF /
+     with color corresponding to the median value of the DF, respectively. "adapt" will try to choose between
      "min" and "median", depending on data range and normalization.
 
 
-7. **Plot dimensions** (in terms of the main heatmap)
-   - [ optional ] `heatmap_width`, `heatmap_height` : either sizes in pixels, or one size and the other "proportional".
-     If neither is specified, plot dimensions will be proportional to the DF size (6 screen pixels per row or column).
-
-
 8. **Plot enhancement**
-   - [ optional ] `row_labels_for_highlighting` = list of keywords for identifying row labels to be highlighted
-     (in red and italic to the right of the heatmap). See WARNING in **Toolbar** section.
    - [ optional ] `metadata_col_to_split_rows` = insert row separators in the main DF and the metadata-rows DF
      before plotting, according to the specified column (between groups of labels with identical values).
    - [ optional ] `metadata_row_to_split_cols` = insert column separators in the main DF and the metadata-cols DF
      before plotting, according to the specified rows (between groups of labels with identical values).
-
-    A separator is a row or column or a group of rows or columns (depending on the DF size and heatmap size)
-    filled with NaNs to be plotted in white.
+   - [ optional ] `row_labels_for_highlighting` = list of keywords for identifying row labels to be highlighted
+     (in red and italic to the right of the heatmap). See WARNING in **Toolbar** section.
 
 
 ### Example of usage
