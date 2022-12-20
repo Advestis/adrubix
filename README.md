@@ -2,9 +2,6 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 #### Status
-<!---
-[![pytests](https://github.com/Advestis/adrubix/actions/workflows/pull-request.yml/badge.svg)](https://github.com/Advestis/adrubix/actions/workflows/pull-request.yml)
--->
 [![push-pypi](https://github.com/Advestis/adrubix/actions/workflows/push-pypi.yml/badge.svg)](https://github.com/Advestis/adrubix/actions/workflows/push-pypi.yml)
 [![push-doc](https://github.com/Advestis/adrubix/actions/workflows/push-doc.yml/badge.svg)](https://github.com/Advestis/adrubix/actions/workflows/push-doc.yml)
 
@@ -18,7 +15,7 @@
 ![ubuntu](https://img.shields.io/badge/Ubuntu-supported--tested-success)
 ![unix](https://img.shields.io/badge/Other%20Unix-supported--untested-yellow)
 
-![python](https://img.shields.io/pypi/pyversions/complex)
+![python](https://img.shields.io/pypi/pyversions/adrubix)
 
 
 ##### Contact
@@ -35,7 +32,7 @@ The interest of such a visualization is to highlight clusters in data and to tra
 
 Example of a heatmap created using AdRubix:
 
-<img src="https://i.ibb.co/yVyGBbR/Ad-Rubix-advanced-JMP-sep.png" alt="heatmap_example" width="1200" />
+![heatmap](https://i.ibb.co/yVyGBbR/Ad-Rubix-advanced-JMP-sep.png)
 
 
 ### Input
@@ -66,6 +63,7 @@ Three input files (CSV) or pandas DataFrames (in any combination) are expected:
 
   - _Example A : column 1 = patient, column 2 = cell type_
   - _Example B : column 1 = score (Y/N), column 2 = treatment, column 3 = cluster_
+
 
 The resulting plot layout is composed of the following elements, all rendered using `holoviews.HeatMap()`
 and fine-tuned via Bokeh plot parameters :
@@ -98,8 +96,7 @@ otherwise, HTML only is saved in current working directory to be able to show th
 
 ### HTML toolbar
 
-
-<img src="https://i.ibb.co/QKc2662/rubix-heatmap-toolbar.png" alt="heatmap_example" width="430" />
+![toolbar](https://i.ibb.co/QKc2662/rubix-heatmap-toolbar.png)
 
 The image above gives an example of toolbar for **AdRubix** HTML plot.
 It comprises the following Bokeh tools, top to bottom:
@@ -119,8 +116,7 @@ and both row and column annotations.
 ### Requirements for saving PNG
 
 To be able to save plots as PNG files, ideally you should have :
-* [Firefox web browser](https://www.mozilla.org/en-US/firefox/new/)
-and [geckodriver](https://github.com/mozilla/geckodriver/releases) installed on your machine
+* [Firefox web browser](https://www.mozilla.org/en-US/firefox/new/) and [geckodriver](https://github.com/mozilla/geckodriver/releases) installed on your machine
 * Folders with the executables of Firefox and geckodriver added to your system PATH environment variable
   - [Adding new locations to system PATH on a Windows machine](https://www.howtogeek.com/118594/how-to-edit-your-system-path-for-easy-command-line-access/)
   - [Adding new locations to system PATH on a Linux machine](https://www.computerhope.com/issues/ch001647.htm)
