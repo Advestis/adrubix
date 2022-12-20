@@ -2,9 +2,6 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 #### Status
-<!---
-[![pytests](https://github.com/Advestis/adrubix/actions/workflows/pull-request.yml/badge.svg)](https://github.com/Advestis/adrubix/actions/workflows/pull-request.yml)
--->
 [![push-pypi](https://github.com/Advestis/adrubix/actions/workflows/push-pypi.yml/badge.svg)](https://github.com/Advestis/adrubix/actions/workflows/push-pypi.yml)
 [![push-doc](https://github.com/Advestis/adrubix/actions/workflows/push-doc.yml/badge.svg)](https://github.com/Advestis/adrubix/actions/workflows/push-doc.yml)
 
@@ -18,7 +15,7 @@
 ![ubuntu](https://img.shields.io/badge/Ubuntu-supported--tested-success)
 ![unix](https://img.shields.io/badge/Other%20Unix-supported--untested-yellow)
 
-![python](https://img.shields.io/pypi/pyversions/complex)
+![python](https://img.shields.io/pypi/pyversions/adrubix)
 
 
 ##### Contact
@@ -35,7 +32,7 @@ The interest of such a visualization is to highlight clusters in data and to tra
 
 Example of a heatmap created using AdRubix:
 
-<img src="https://i.ibb.co/yVyGBbR/Ad-Rubix-advanced-JMP-sep.png" alt="heatmap_example" width="1200" />
+![heatmap](https://i.ibb.co/yVyGBbR/Ad-Rubix-advanced-JMP-sep.png)
 
 
 ### Input
@@ -98,8 +95,7 @@ otherwise, HTML only is saved in current working directory to be able to show th
 
 ### HTML toolbar
 
-
-<img src="https://i.ibb.co/QKc2662/rubix-heatmap-toolbar.png" alt="heatmap_example" width="430" />
+![toolbar](https://i.ibb.co/QKc2662/rubix-heatmap-toolbar.png)
 
 The image above gives an example of toolbar for **AdRubix** HTML plot.
 It comprises the following Bokeh tools, top to bottom:
