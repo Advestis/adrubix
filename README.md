@@ -64,6 +64,7 @@ Three input files (CSV) or pandas DataFrames (in any combination) are expected:
   - _Example A : column 1 = patient, column 2 = cell type_
   - _Example B : column 1 = score (Y/N), column 2 = treatment, column 3 = cluster_
 
+
 The resulting plot layout is composed of the following elements, all rendered using `holoviews.HeatMap()`
 and fine-tuned via Bokeh plot parameters :
 
@@ -115,8 +116,7 @@ and both row and column annotations.
 ### Requirements for saving PNG
 
 To be able to save plots as PNG files, ideally you should have :
-* [Firefox web browser](https://www.mozilla.org/en-US/firefox/new/)
-and [geckodriver](https://github.com/mozilla/geckodriver/releases) installed on your machine
+* [Firefox web browser](https://www.mozilla.org/en-US/firefox/new/) and [geckodriver](https://github.com/mozilla/geckodriver/releases) installed on your machine
 * Folders with the executables of Firefox and geckodriver added to your system PATH environment variable
   - [Adding new locations to system PATH on a Windows machine](https://www.howtogeek.com/118594/how-to-edit-your-system-path-for-easy-command-line-access/)
   - [Adding new locations to system PATH on a Linux machine](https://www.computerhope.com/issues/ch001647.htm)
