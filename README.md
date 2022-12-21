@@ -30,9 +30,12 @@ Package allowing to create **RubixHeatmap** objects for plotting complex, highly
 
 The interest of such a visualization is to highlight clusters in data and to track any patterns vis-à-vis metadata.
 
+&#9658; _You can easily test AdRubix tool on your data with this [friendly Streamlit GUI](https://adrubix.streamlit.app/)
+before integrating it into your projects code-wise._
+
 Example of a heatmap created using AdRubix:
 
-![heatmap](https://i.ibb.co/yVyGBbR/Ad-Rubix-advanced-JMP-sep.png)
+![<img src="https://i.ibb.co/yVyGBbR/Ad-Rubix-advanced-JMP-sep.png" width="700">](https://i.ibb.co/yVyGBbR/Ad-Rubix-advanced-JMP-sep.png)
 
 
 ### Input
