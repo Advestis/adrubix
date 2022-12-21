@@ -583,8 +583,14 @@ class RubixHeatmap:
         """
         Align data with metadata
         """
-        self.data = self.data.reindex(index=self.metadata_rows.index)
-        self.data = self.data.reindex(columns=self.metadata_cols.columns)
+        common_index = self.data.index.intersection(self.metadata_rows.index)
+        common_columns = self.data.columns.intersection(self.metadata_cols.columns)
+
+        self.data = self.data.reindex(index=common_index)
+        self.metadata_rows = self.metadata_rows.reindex(index=common_index)
+
+        self.data = self.data.reindex(columns=common_columns)
+        self.metadata_cols = self.metadata_cols.reindex(columns=common_columns)
 
         if len(self.data) == 0 or len(self.data.columns) == 0:
             raise IndexError("Main data and metadata have no rows or no columns in common! Please check your data.")
