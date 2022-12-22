@@ -1,0 +1,753 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Readme &#8212; complex  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+<link href="_static/styles/bootstrap.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=796348d33e8b1d947c94" rel="stylesheet">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=796348d33e8b1d947c94">
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=796348d33e8b1d947c94">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'readme';</script>
+    <link rel="shortcut icon" href="_static/favicon.png"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Complex Module" href="complex.html" />
+    <link rel="prev" title="Complex documentation" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="docsearch:language" content="en">
+  </head>
+  
+  
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="180" data-default-mode="light">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  
+  <input type="checkbox" class="sidebar-toggle" name="__primary" id="__primary">
+  <label class="overlay overlay-primary" for="__primary"></label>
+
+  
+  <input type="checkbox" class="sidebar-toggle" name="__secondary" id="__secondary">
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+      
+<form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+  </div>
+
+  
+  <nav class="bd-header navbar navbar-expand-lg bd-navbar" id="navbar-main"><div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+      <span class="fa-solid fa-bars"></span>
+  </label>
+  <div id="navbar-start">
+    
+    
+  
+
+
+<a class="navbar-brand logo" href="index.html">
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <img src="_static/logo_Advestis_HD.png" class="logo__image only-light" alt="Logo image">
+    <img src="_static/logo_Advestis_HD.png" class="logo__image only-dark" alt="Logo image">
+  
+  
+</a>
+    
+  </div>
+
+  
+  <div class="col-lg-9 navbar-header-items">
+    <div id="navbar-center" class="mr-auto">
+      
+      <div class="navbar-center-item">
+        <nav class="navbar-nav">
+    <p class="sidebar-header-items__title" role="heading" aria-level="1" aria-label="Site Navigation">
+        Site Navigation
+    </p>
+    <ul id="navbar-main-elements" class="navbar-nav">
+        
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="#">
+                        Readme
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="complex.html">
+                        Complex Module
+                      </a>
+                    </li>
+                
+    </ul>
+</nav>
+      </div>
+      
+    </div>
+
+    <div id="navbar-end">
+      
+        <div class="navbar-end-item navbar-persistent--container">
+          
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+        </div>
+      
+      
+      <div class="navbar-end-item">
+        <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+</button>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Advestis" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fa-brands fa-square-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.advestis.com/" title="Site web" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fab fa-google"></i></span>
+            <label class="sr-only">Site web</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+  </div>
+
+
+  
+  
+    <div class="navbar-persistent--mobile">
+<button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-toggle="tooltip">
+  <i class="fa-solid fa-magnifying-glass"></i>
+</button>
+    </div>
+  
+
+  
+  <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+  </label>
+  
+
+</div>
+  </nav>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+      
+      <div class="navbar-center-item">
+        <nav class="navbar-nav">
+    <p class="sidebar-header-items__title" role="heading" aria-level="1" aria-label="Site Navigation">
+        Site Navigation
+    </p>
+    <ul id="navbar-main-elements" class="navbar-nav">
+        
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="#">
+                        Readme
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="complex.html">
+                        Complex Module
+                      </a>
+                    </li>
+                
+    </ul>
+</nav>
+      </div>
+      
+      </div>
+    
+
+    
+    
+    <div class="sidebar-header-items__end">
+      
+      <div class="navbar-end-item">
+        <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+</button>
+      </div>
+      
+      <div class="navbar-end-item">
+        <ul id="navbar-icon-links" class="navbar-nav" aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/Advestis" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fa-brands fa-square-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://www.advestis.com/" title="Site web" class="nav-link" rel="noopener" target="_blank" data-toggle="tooltip"><span><i class="fab fa-google"></i></span>
+            <label class="sr-only">Site web</label></a>
+        </li>
+      </ul>
+      </div>
+      
+    </div>
+    
+  </div>
+
+  
+  <div class="sidebar-start-items sidebar-primary__section">
+    <div class="sidebar-start-items__item">
+<form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+    </div>
+  </div>
+  
+
+  
+  <div class="sidebar-end-items sidebar-primary__section">
+    <div class="sidebar-end-items__item">
+    </div>
+  </div>
+
+  
+  <div id="rtd-footer-container"></div>
+
+      </div>
+      <main id="main-content" class="bd-main">
+        
+        
+        <div class="bd-content">
+          <div class="bd-article-container">
+            
+            <div class="bd-header-article">
+                
+            </div>
+            
+            
+            <article class="bd-article" role="main">
+              
+  <section id="readme">
+<h1>Readme<a class="headerlink" href="#readme" title="Permalink to this heading">#</a></h1>
+<a class="reference external image-reference" href="https://advestis.github.io/complex"><img alt="doc" src="https://img.shields.io/badge/-Documentation-blue" /></a>
+<a class="reference external image-reference" href="https://www.gnu.org/licenses/gpl-3.0"><img alt="License: GPL v3" src="https://img.shields.io/badge/License-GPL%20v3-blue.svg" /></a>
+<section id="status">
+<h2>Status<a class="headerlink" href="#status" title="Permalink to this heading">#</a></h2>
+<a class="reference external image-reference" href="https://github.com/Advestis/adrubix/actions/workflows/push-pypi.yml"><img alt="push-pypi" src="https://github.com/Advestis/adrubix/actions/workflows/push-pypi.yml/badge.svg" /></a>
+<a class="reference external image-reference" href="https://github.com/Advestis/adrubix/actions/workflows/push-doc.yml"><img alt="push-doc" src="https://github.com/Advestis/adrubix/actions/workflows/push-doc.yml/badge.svg" /></a>
+<a class="reference external image-reference" href="https://img.shields.io/badge/Maintained%3F-yes-green.svg"><img alt="maintained" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" /></a>
+<a class="reference external image-reference" href="https://github.com/Advestis/adrubix/issues"><img alt="issues" src="https://img.shields.io/github/issues/Advestis/adrubix.svg" /></a>
+<a class="reference external image-reference" href="https://github.com/Advestis/adrubix/pulls"><img alt="pr" src="https://img.shields.io/github/issues-pr/Advestis/adrubix.svg" /></a>
+</section>
+<section id="compatibilities">
+<h2>Compatibilities<a class="headerlink" href="#compatibilities" title="Permalink to this heading">#</a></h2>
+<a class="reference external image-reference" href="https://img.shields.io/badge/Ubuntu-supported--tested-success"><img alt="ubuntu" src="https://img.shields.io/badge/Ubuntu-supported--tested-success" /></a>
+<a class="reference external image-reference" href="https://img.shields.io/badge/Other%20Unix-supported--untested-yellow"><img alt="unix" src="https://img.shields.io/badge/Other%20Unix-supported--untested-yellow" /></a>
+<a class="reference external image-reference" href="https://img.shields.io/pypi/pyversions/adrubix"><img alt="python" src="https://img.shields.io/pypi/pyversions/adrubix" /></a>
+<section id="contact">
+<h3>Contact<a class="headerlink" href="#contact" title="Permalink to this heading">#</a></h3>
+<a class="reference external image-reference" href="https://www.linkedin.com/company/advestis/"><img alt="linkedin" src="https://img.shields.io/badge/LinkedIn-Advestis-blue" /></a>
+<a class="reference external image-reference" href="https://www.advestis.com/"><img alt="website" src="https://img.shields.io/badge/website-Advestis.com-blue" /></a>
+<a class="reference external image-reference" href="mailto:afedorov&#37;&#52;&#48;advestis&#46;com"><img alt="mail" src="https://img&#46;shields&#46;io/badge/mail-maintainers-blue" /></a>
+<section id="adrubix">
+<h4>AdRubix<a class="headerlink" href="#adrubix" title="Permalink to this heading">#</a></h4>
+<p>Package allowing to create <strong>RubixHeatmap</strong> objects for plotting complex, highly customizable heatmaps with metadata.</p>
+<p>The interest of such a visualization is to highlight clusters in data and to track any patterns vis-à-vis metadata.</p>
+<p>&amp;#9658; <em>You can easily test AdRubix tool on your data with this `friendly Streamlit GUI &lt;https://adrubix.streamlit.app/&gt;`_
+before integrating it into your projects code-wise.</em></p>
+<p>Example of a heatmap created using AdRubix:</p>
+<a class="reference external image-reference" href="https://i.ibb.co/yVyGBbR/Ad-Rubix-advanced-JMP-sep.png"><img alt="&lt;img src=&quot;https://i.ibb.co/yVyGBbR/Ad-Rubix-advanced-JMP-sep.png&quot; width=&quot;700&quot;&gt;" src="https://i.ibb.co/yVyGBbR/Ad-Rubix-advanced-JMP-sep.png" /></a>
+<section id="input">
+<h5>Input<a class="headerlink" href="#input" title="Permalink to this heading">#</a></h5>
+<p>Three input files (CSV) or pandas DataFrames (in any combination) are expected:</p>
+<ul>
+<li><p><strong>Main data</strong></p>
+<p>Generally comes clusterized: for example, by applying <a class="reference external" href="https://pypi.org/project/adnmtf/">AdNMTF</a> to raw data.</p>
+<ul class="simple">
+<li><p><em>Example A (see figure above) : rows = genes, columns = cell groups for each patient</em></p></li>
+<li><p><em>Example B : rows = biomarkers at different timepoints, columns = patients</em></p></li>
+</ul>
+</li>
+<li><p><strong>Metadata for rows</strong></p>
+<p>Index of these metadata should correspond to the <strong>index</strong> of main data
+(at least partially, in which case the plot will only keep the matching rows).</p>
+<ul class="simple">
+<li><p><em>Example A : column 1 = gene group, column 2 = gene</em></p></li>
+<li><p><em>Example B : column 1 = timepoint, column 2 = biomarker</em></p></li>
+</ul>
+</li>
+<li><p><strong>Metadata for columns</strong></p>
+<p>Index of these metadata should correspond to the <strong>columns</strong> of main data
+(at least partially, in which case the plot will only keep the matching columns).</p>
+<ul class="simple">
+<li><p><em>Example A : column 1 = patient, column 2 = cell type</em></p></li>
+<li><p><em>Example B : column 1 = score (Y/N), column 2 = treatment, column 3 = cluster</em></p></li>
+</ul>
+</li>
+</ul>
+<p>The resulting plot layout is composed of the following elements, all rendered using <code class="docutils literal notranslate"><span class="pre">holoviews.HeatMap()</span></code>
+and fine-tuned via Bokeh plot parameters :</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">####  [CA]  ####</span>
+
+<span class="p">[</span><span class="n">RA</span><span class="p">]</span>  <span class="p">[</span><span class="n">MP</span><span class="p">]</span>  <span class="p">[</span><span class="n">RL</span><span class="p">]</span>
+
+<span class="c1">####  [CL]  ####</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[MP]</span></code> <em>main plot</em> (with colorbar on the right)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[RA]</span></code> <em>row annotations</em> (from metadata for rows)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[CA]</span></code> <em>column annotations</em> (from metadata for columns) : can be duplicated under the main plot for long DFs</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[RL]</span></code> <em>row legend</em> (RA explained) : optional</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[CL]</span></code> <em>column legend</em> (CA explained) : optional</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">####</span></code> white space filler</p></li>
+</ul>
+</section>
+<section id="output">
+<h5>Output<a class="headerlink" href="#output" title="Permalink to this heading">#</a></h5>
+<p><code class="docutils literal notranslate"><span class="pre">plot()</span></code> method of the class will save :</p>
+<ul class="simple">
+<li><p><strong>HTML plot</strong> with an interactive toolbar enabling zooming into main heatmap and metadata</p></li>
+<li><p><strong>PNG image</strong> corresponding to the HTML plot (without toolbar) : if <code class="docutils literal notranslate"><span class="pre">save_png</span></code> evaluates to True</p></li>
+</ul>
+<p>With <code class="docutils literal notranslate"><span class="pre">plot_save_path</span></code> specified, HTML and PNG are saved according to it,
+otherwise, HTML only is saved in current working directory to be able to show the plot.</p>
+</section>
+<section id="html-toolbar">
+<h5>HTML toolbar<a class="headerlink" href="#html-toolbar" title="Permalink to this heading">#</a></h5>
+<a class="reference external image-reference" href="https://i.ibb.co/QKc2662/rubix-heatmap-toolbar.png"><img alt="toolbar" src="https://i.ibb.co/QKc2662/rubix-heatmap-toolbar.png" /></a>
+<p>The image above gives an example of toolbar for <strong>AdRubix</strong> HTML plot.
+It comprises the following Bokeh tools, top to bottom:</p>
+<ul class="simple">
+<li><p><strong>Box Zoom</strong> (activated by default) : drag &amp; drop to select a rectangular area for zooming in</p></li>
+<li><p><strong>Pan</strong> : drag to move a zoomed-in image around</p></li>
+<li><p><strong>Wheel Zoom</strong> : zoom in or out with your mouse wheel</p></li>
+<li><p><strong>Reset</strong> to the initial view (after any combination of zoom and pan)</p></li>
+<li><p><strong>Crosshairs</strong> from mouse location (activated by default)</p></li>
+</ul>
+<p>You can activate/deactivate any zoom, pan or crosshairs tool by clicking on it.</p>
+<p><strong>WARNING.</strong> When using <code class="docutils literal notranslate"><span class="pre">row_labels_for_highlighting</span></code> parameter, zoom can only work linked between
+main data and column annotations. With <code class="docutils literal notranslate"><span class="pre">row_labels_for_highlighting=None</span></code>, zoom is always linked between main data
+and both row and column annotations.</p>
+</section>
+<section id="requirements-for-saving-png">
+<h5>Requirements for saving PNG<a class="headerlink" href="#requirements-for-saving-png" title="Permalink to this heading">#</a></h5>
+<p>To be able to save plots as PNG files, ideally you should have :</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.mozilla.org/en-US/firefox/new/">Firefox web browser</a> and <a class="reference external" href="https://github.com/mozilla/geckodriver/releases">geckodriver</a> installed on your machine</p></li>
+<li><p>Folders with the executables of Firefox and geckodriver added to your system PATH environment variable</p>
+<ul>
+<li><p><a class="reference external" href="https://www.howtogeek.com/118594/how-to-edit-your-system-path-for-easy-command-line-access/">Adding new locations to system PATH on a Windows machine</a></p></li>
+<li><p><a class="reference external" href="https://www.computerhope.com/issues/ch001647.htm">Adding new locations to system PATH on a Linux machine</a></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="main-parameters">
+<h5>Main parameters<a class="headerlink" href="#main-parameters" title="Permalink to this heading">#</a></h5>
+<p>Default values are bolded, where applicable.</p>
+<ol class="arabic">
+<li><p><strong>Data input and plot output</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> (DF) or <code class="docutils literal notranslate"><span class="pre">data_file</span></code> (CSV file name)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">metadata_rows</span></code> (DF) or <code class="docutils literal notranslate"><span class="pre">metadata_rows_file</span></code> (CSV file name)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">metadata_cols</span></code> (DF) or <code class="docutils literal notranslate"><span class="pre">metadata_cols_file</span></code> (CSV file name)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data_path</span></code> required if any of <code class="docutils literal notranslate"><span class="pre">[...]_file</span></code> parameters are used. <strong>Do not forget a slash at the end of the path</strong>.
+Also, <em>if you work on a Windows machine, be sure to use double backslashes ``\`` instead of single slashes</em>.</p></li>
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">plot_save_path</span></code> = path to HTML file to be saved, <strong>including its name</strong>.
+If <strong>None</strong> is provided, HTML is saved in current working directory
+under the name <code class="docutils literal notranslate"><span class="pre">&lt;your_python_script_name&gt;.html</span></code> and automatically opened in a web browser.</p></li>
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">save_png</span></code> = True/<strong>False</strong> or 1/0. PNG image will be saved in the same folder as HTML
+under the same name except for the extension .png</p></li>
+</ul>
+</li>
+<li><p><strong>Data scaling and normalization + Dataprep</strong></p>
+<p><strong>NB.</strong> It is still preferred that you do data scaling and/or normalization externally before using <code class="docutils literal notranslate"><span class="pre">RubixHeatmap</span></code>
+in order to have more control and transparency over your data.</p>
+<p><strong>NB.</strong> If you go for it, for one axis you must choose between <code class="docutils literal notranslate"><span class="pre">scale_along</span></code> and <code class="docutils literal notranslate"><span class="pre">normalize_along</span></code>.
+You cannot use both simultaneously along the same axis.</p>
+<ul class="simple">
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">color_scaling_quantile</span></code> = quantile for getting rid of outliers (in %), default <strong>95</strong>,
+accepted 80…100. Applied both to <code class="docutils literal notranslate"><span class="pre">scale_along</span></code> and <code class="docutils literal notranslate"><span class="pre">normalize_along</span></code> options.</p>
+<ul>
+<li><p>When applied to <code class="docutils literal notranslate"><span class="pre">scale_along</span></code>, <code class="docutils literal notranslate"><span class="pre">color_scaling_quantile=95</span></code> will cap top (&gt; 95% quantile) values.</p></li>
+<li><p>When applied to <code class="docutils literal notranslate"><span class="pre">normalize_along</span></code>, <code class="docutils literal notranslate"><span class="pre">color_scaling_quantile=95</span></code> will cap both top (&gt; 97.5% quantile)
+and bottom (&lt;2.5% quantile) values before normalizing data (see below).</p></li>
+</ul>
+</li>
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">scale_along</span></code> = “columns”/”rows” or 0/1 for scaling and capping data along the specified axis.
+Default : <strong>None</strong> = do nothing.</p></li>
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">normalize_along</span></code> = “columns”/”rows” or 0/1 for scaling and capping + normalizing data
+along the specified axis : <code class="docutils literal notranslate"><span class="pre">(x</span> <span class="pre">-</span> <span class="pre">median(x)</span> <span class="pre">by</span> <span class="pre">column</span> <span class="pre">or</span> <span class="pre">row)</span> <span class="pre">/</span> <span class="pre">MAD(x)</span> <span class="pre">by</span> <span class="pre">column</span> <span class="pre">or</span> <span class="pre">row</span></code>,
+where <code class="docutils literal notranslate"><span class="pre">MAD</span></code> is median average deviation. Default : <strong>None</strong> = do nothing.</p></li>
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">data_rows_to_drop</span></code>, <code class="docutils literal notranslate"><span class="pre">data_cols_to_drop</span></code> = lists of the names of rows/columns in main data not intended
+to be plotted. Nonexistent names will be skipped without raising an error.</p></li>
+</ul>
+</li>
+<li><p><strong>Colorbar</strong></p>
+<ul class="simple">
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">colorbar_title</span></code> (<strong>no title</strong> by default)</p></li>
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">colorbar_height</span></code>, <code class="docutils literal notranslate"><span class="pre">colorbar_location</span></code> = “top”/”center”/”<strong>bottom</strong>”
+(always to the right of the main plot)</p></li>
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">show_colorbar</span></code> = <strong>True</strong>/False</p></li>
+</ul>
+</li>
+<li><p><strong>Metadata</strong></p>
+<ul class="simple">
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">show_metadata_rows</span></code> = <strong>True</strong>/False</p></li>
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">show_metadata_rows_labels</span></code> = True/<strong>False</strong>
+(font size is adapted to main dataframe length and to heatmap height, between 5pt and 10pt)</p></li>
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">show_metadata_cols</span></code> = <strong>True</strong>/False</p></li>
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">duplicate_metadata_cols</span></code> = True/False/<strong>None</strong>
+(if None, set automatically to True for DFs longer that 70 rows)</p></li>
+</ul>
+</li>
+<li><p><strong>Legends</strong></p>
+<ul class="simple">
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">show_rows_legend</span></code> = <strong>True</strong>/False</p></li>
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">show_cols_legend</span></code> = <strong>True</strong>/False</p></li>
+</ul>
+</li>
+<li><p><strong>Plot dimensions</strong> (in terms of the main heatmap)</p>
+<ul class="simple">
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">heatmap_width</span></code>, <code class="docutils literal notranslate"><span class="pre">heatmap_height</span></code> : either sizes in pixels, or one size and the other “proportional”.
+If neither is specified, plot dimensions will be proportional to the DF size (6 screen pixels per row or column).</p></li>
+</ul>
+</li>
+<li><p><strong>Colormaps</strong> (must be known by <strong>holoviews</strong>)</p>
+<dl class="simple">
+<dt><strong>NB.</strong> A <em>separator</em> is a row or column or a group of rows or columns (depending on the DF size and heatmap size)</dt><dd><p>inserted in the main dataframe to be plotted in a specified color in order to visually separate meaningful blocks
+of data.</p>
+</dd>
+</dl>
+<ul class="simple">
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">colormap_main</span></code> (default “<strong>coolwarm</strong>” / “<strong>YlOrRd</strong>” for non-negative data)</p></li>
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">colormap_metarows</span></code> (default “<strong>Glasbey</strong>”)</p></li>
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">colormap_metacols</span></code> (default “<strong>Category20</strong>”)</p></li>
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">nan_color</span></code> (default “<strong>black</strong>”) = hex color string “#xxxxxx” or named HTML color
+for filling NaN values in the main heatmap</p></li>
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">sep_color</span></code> (default “<strong>white</strong>”) = hex color string “#xxxxxx” or named HTML color
+for filling separators in the main heatmap</p></li>
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">sep_value</span></code> = <strong>None</strong> / “min” / “median” / “adapt”
+= plot separators filled with <code class="docutils literal notranslate"><span class="pre">sep_color</span></code> / with color corresponding to the mininum value of the DF /
+with color corresponding to the median value of the DF, respectively. “adapt” will try to choose between
+“min” and “median”, depending on data range and normalization.</p></li>
+</ul>
+</li>
+<li><p><strong>Plot enhancement</strong></p>
+<ul class="simple">
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">metadata_rows_sep</span></code> = insert row separators in the main DF and the metadata-rows DF
+before plotting, according to the specified column (between groups of labels with identical values).</p></li>
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">metadata_cols_sep</span></code> = insert column separators in the main DF and the metadata-cols DF
+before plotting, according to the specified rows (between groups of labels with identical values).</p></li>
+<li><p>[ optional ] <code class="docutils literal notranslate"><span class="pre">row_labels_for_highlighting</span></code> = list of keywords for identifying row labels to be highlighted
+(in red and italic to the right of the heatmap). See WARNING in <strong>Toolbar</strong> section.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="example-of-usage">
+<h5>Example of usage<a class="headerlink" href="#example-of-usage" title="Permalink to this heading">#</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">adrubix</span> <span class="kn">import</span> <span class="n">RubixHeatmap</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">main_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">],</span> <span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">])</span>
+
+<span class="n">hm</span> <span class="o">=</span> <span class="n">RubixHeatmap</span><span class="p">(</span>
+    <span class="n">data_path</span><span class="o">=</span><span class="s2">&quot;/home/user/myproject/data/&quot;</span><span class="p">,</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">main_data</span><span class="p">,</span>
+    <span class="n">metadata_rows_file</span><span class="o">=</span><span class="s2">&quot;meta_rows.csv&quot;</span><span class="p">,</span>
+    <span class="n">metadata_cols_file</span><span class="o">=</span><span class="s2">&quot;meta_cols.csv&quot;</span><span class="p">,</span>
+    <span class="n">plot_save_path</span><span class="o">=</span><span class="s2">&quot;/home/user/myproject/output/plot.html&quot;</span><span class="p">,</span>
+    <span class="n">save_png</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">scale_along</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">,</span>
+    <span class="n">colorbar_title</span><span class="o">=</span><span class="s2">&quot;my colorbar&quot;</span><span class="p">,</span>
+    <span class="n">colorbar_location</span><span class="o">=</span><span class="s2">&quot;top&quot;</span><span class="p">,</span>
+    <span class="n">show_metadata_rows_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">show_rows_legend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="c1"># duplicate_metadata_cols=False,</span>
+    <span class="n">colormap_main</span><span class="o">=</span><span class="s2">&quot;fire&quot;</span><span class="p">,</span>
+    <span class="n">heatmap_width</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span>
+    <span class="n">heatmap_height</span><span class="o">=</span><span class="s2">&quot;proportional&quot;</span><span class="p">,</span>
+    <span class="n">data_rows_to_drop</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;useless_row_1&quot;</span><span class="p">,</span> <span class="s2">&quot;useless_row_2&quot;</span><span class="p">],</span>
+    <span class="n">row_labels_for_highlighting</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;row_keyword_A&quot;</span><span class="p">,</span> <span class="s2">&quot;row_keyword_B&quot;</span><span class="p">],</span>
+    <span class="n">metadata_rows_sep</span><span class="o">=</span><span class="s2">&quot;Group&quot;</span><span class="p">,</span>
+    <span class="n">metadata_cols_sep</span><span class="o">=</span><span class="s2">&quot;Subject&quot;</span><span class="p">,</span>
+    <span class="n">nan_color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">,</span>
+    <span class="n">sep_color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span>
+    <span class="c1"># sep_value=&quot;median&quot;</span>
+<span class="p">)</span>
+<span class="n">hm</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+</section>
+</section>
+
+
+            </article>
+            
+            
+            
+            <footer class="bd-footer-article">
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+  <a class='left-prev' id="prev-link" href="index.html" title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">Complex documentation</p>
+      </div>
+  </a>
+  <a class='right-next' id="next-link" href="complex.html" title="next page">
+  <div class="prev-next-info">
+      <p class="prev-next-subtitle">next</p>
+      <p class="prev-next-title">Complex Module</p>
+  </div>
+  <i class="fa-solid fa-angle-right"></i>
+  </a>
+</div>
+            </footer>
+            
+          </div>
+          
+          
+          
+            <div class="bd-sidebar-secondary bd-toc">
+              
+<div class="toc-item">
+  
+<div class="tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+</div>
+<nav id="bd-toc-nav" class="page-toc">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#status">
+   Status
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#compatibilities">
+   Compatibilities
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#contact">
+     Contact
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#adrubix">
+       AdRubix
+      </a>
+      <ul class="nav section-nav flex-column">
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#input">
+         Input
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#output">
+         Output
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#html-toolbar">
+         HTML toolbar
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#requirements-for-saving-png">
+         Requirements for saving PNG
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#main-parameters">
+         Main parameters
+        </a>
+       </li>
+       <li class="toc-h5 nav-item toc-entry">
+        <a class="reference internal nav-link" href="#example-of-usage">
+         Example of usage
+        </a>
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+</nav>
+</div>
+
+<div class="toc-item">
+  
+<div id="searchbox"></div>
+</div>
+
+<div class="toc-item">
+  
+</div>
+
+<div class="toc-item">
+  
+<div class="tocsection sourcelink">
+    <a href="_sources/readme.rst.txt">
+        <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+</div>
+
+</div>
+
+            </div>
+          
+          
+        </div>
+        <footer class="bd-footer-content">
+          <div class="bd-footer-content__inner">
+            
+          </div>
+        </footer>
+        
+      </main>
+    </div>
+  </div>
+
+  
+    
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=796348d33e8b1d947c94"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=796348d33e8b1d947c94"></script>
+
+  <footer class="bd-footer"><div class="bd-footer__inner container">
+  
+  <div class="footer-item">
+    
+<p class="copyright">
+
+    &copy; Copyright 2022, Advestis.<br>
+
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    <p class="theme-version">
+    Built with the
+    <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">
+        PyData Sphinx Theme
+    </a>
+    0.12.0.
+</p>
+  </div>
+  
+  <div class="footer-item">
+    
+<p class="sphinx-version">
+Created using <a href="http://sphinx-doc.org/">Sphinx</a> 5.3.0.<br>
+</p>
+
+  </div>
+  
+</div>
+  </footer>
+  </body>
+</html>
