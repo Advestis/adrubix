@@ -173,12 +173,12 @@ class RubixHeatmap:
         Names of rows in main data not intended to be plotted (optional). Nonexistent names will be skipped.
     data_cols_to_drop: Optional[list]
         Names of columns in main data not intended to be plotted (optional). Nonexistent names will be skipped.
-    metadata_col_to_split_rows: Optional[str]
+    metadata_rows_sep: Optional[str]
         Insert row separators in the main DF and the metadata-rows DF before plotting,
         according to the specified column (between groups of labels with identical values).
         A separator is a row or a group of rows (depending on the DF length and heatmap height)
         filled with either minimum value for non-normalized data, or median value for normalized one.
-    metadata_row_to_split_cols: Optional[str]
+    metadata_cols_sep: Optional[str]
         Insert column separators in the main DF and the metadata-cols DF before plotting,
         according to the specified rows (between groups of labels with identical values).
         A separator is a column or a group of columns (depending on the DF length and heatmap height)
@@ -236,8 +236,8 @@ class RubixHeatmap:
             columns_label: Optional[str] = None,
             data_rows_to_drop: Optional[list] = None,
             data_cols_to_drop: Optional[list] = None,
-            metadata_col_to_split_rows: Optional[str] = None,
-            metadata_row_to_split_cols: Optional[str] = None,
+            metadata_rows_sep: Optional[str] = None,
+            metadata_cols_sep: Optional[str] = None,
             sep_value: Optional[str] = None
     ) -> None:
 
@@ -365,8 +365,8 @@ class RubixHeatmap:
         self.columns_label = columns_label
         self.data_rows_to_drop = data_rows_to_drop
         self.data_cols_to_drop = data_cols_to_drop
-        self.metadata_col_to_split_rows = metadata_col_to_split_rows
-        self.metadata_row_to_split_cols = metadata_row_to_split_cols
+        self.metadata_rows_sep = metadata_rows_sep
+        self.metadata_cols_sep = metadata_cols_sep
 
         # Set labels for axes
         self.dummy_label = "."  # label for plotting purposes but not intended to be shown on the plot
@@ -426,7 +426,7 @@ class RubixHeatmap:
             raise ValueError(f"Wrong `sep_value`: {self.sep_value}. Expected : 'nan', 'main', 'median' or 'adapt'")
 
         # Insert separators into data, if required
-        if self.metadata_col_to_split_rows is not None or self.metadata_row_to_split_cols is not None:
+        if self.metadata_rows_sep is not None or self.metadata_cols_sep is not None:
             self.split_data()
 
         if self.duplicate_metadata_cols is None:
@@ -479,11 +479,11 @@ class RubixHeatmap:
                 df = df.T
             return df
 
-        if self.metadata_col_to_split_rows:
+        if self.metadata_rows_sep:
             self.metadata_rows_codes = replace_index_duplicates_with_dots(self.metadata_rows_codes)
             self.data_relabeled = replace_index_duplicates_with_dots(self.data_relabeled)
 
-        if self.metadata_row_to_split_cols:
+        if self.metadata_cols_sep:
             self.metadata_cols_codes = replace_index_duplicates_with_dots(self.metadata_cols_codes, axis=1)
             self.data_relabeled = replace_index_duplicates_with_dots(self.data_relabeled, axis=1)
 
@@ -686,36 +686,36 @@ class RubixHeatmap:
             return df_split_with_seps
 
         # Split along rows
-        if self.metadata_col_to_split_rows is not None:
+        if self.metadata_rows_sep is not None:
 
             data = pd.concat([self.metadata_rows, self.data], axis=1)
 
             self.metadata_rows = split_df(
                 df=self.metadata_rows,
-                label=self.metadata_col_to_split_rows,
+                label=self.metadata_rows_sep,
                 axis=0
             )
             self.data = split_df(
                 df=data,
-                label=self.metadata_col_to_split_rows,
+                label=self.metadata_rows_sep,
                 axis=0,
                 sep_value="#sep#"
             )
             self.data = self.data.drop(columns=self.metadata_rows.columns)
 
         # Split along columns
-        if self.metadata_row_to_split_cols is not None:
+        if self.metadata_cols_sep is not None:
 
             data = pd.concat([self.metadata_cols, self.data], axis=0)
 
             self.metadata_cols = split_df(
                 df=self.metadata_cols,
-                label=self.metadata_row_to_split_cols,
+                label=self.metadata_cols_sep,
                 axis=1
             )
             self.data = split_df(
                 df=data,
-                label=self.metadata_row_to_split_cols,
+                label=self.metadata_cols_sep,
                 axis=1,
                 sep_value="#sep#"
             )

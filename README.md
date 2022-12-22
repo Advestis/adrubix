@@ -210,9 +210,9 @@ Default values are bolded, where applicable.
 
 
 8. **Plot enhancement**
-   - [ optional ] `metadata_col_to_split_rows` = insert row separators in the main DF and the metadata-rows DF
+   - [ optional ] `metadata_rows_sep` = insert row separators in the main DF and the metadata-rows DF
      before plotting, according to the specified column (between groups of labels with identical values).
-   - [ optional ] `metadata_row_to_split_cols` = insert column separators in the main DF and the metadata-cols DF
+   - [ optional ] `metadata_cols_sep` = insert column separators in the main DF and the metadata-cols DF
      before plotting, according to the specified rows (between groups of labels with identical values).
    - [ optional ] `row_labels_for_highlighting` = list of keywords for identifying row labels to be highlighted
      (in red and italic to the right of the heatmap). See WARNING in **Toolbar** section.
@@ -244,8 +244,8 @@ hm = RubixHeatmap(
     heatmap_height="proportional",
     data_rows_to_drop=["useless_row_1", "useless_row_2"],
     row_labels_for_highlighting=["row_keyword_A", "row_keyword_B"],
-    metadata_col_to_split_rows="Group",
-    metadata_row_to_split_cols="Subject",
+    metadata_rows_sep="Group",
+    metadata_cols_sep="Subject",
     nan_color="orange",
     sep_color="green",
     # sep_value="median"
