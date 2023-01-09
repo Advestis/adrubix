@@ -81,6 +81,7 @@ class RubixHeatmap:
     plot_save_path: Optional[str]
         Path to an HTML file for saving the plot. If none is provided, HTML is saved in current working directory
         under the name <your_python_script_name>.html and automatically opened in a web browser.
+
     save_html: Union[bool, int, str]
         If equal to True / string starting with "T" or "t", e.g. "True" / "1" or 1, save HTML plot
         (if save_png is False, will always save HTML)
@@ -90,7 +91,8 @@ class RubixHeatmap:
     png_tool: str
         // "native" (default) = with Bokeh's export_png() (requires Selenium + ChromeDriver installed, takes more time)
         // "hti" = with html2image library (only requires a Chromium-based browser on the machine,
-           but leaves transparent background and crops PNG to screen size, thus unreliable for large plots)
+        but leaves transparent background and crops PNG to screen size, thus unreliable for large plots)
+
     color_scaling_quantile: Union[int, float]
         Quantile for capping and scaling the data to get rid of outliers (read more about it in the README)
     scale_along: Union[int, str, None]
@@ -101,6 +103,7 @@ class RubixHeatmap:
         // 0 or "columns" = per columns : x => (x - median(column)) / MAD(column)
         // 1 or "rows" = per rows : x => (x - median(row)) / MAD(row)
         // None (default, and also any other value except for 0 or 1) = do not normalize
+
     colorbar_title: str
         Title of the colorbar for main heatmap
     colorbar_height: Optional[int]
@@ -109,6 +112,7 @@ class RubixHeatmap:
         Location of the colorbar: "top", "center" or "bottom" (default), always to the right of the heatmap
     show_colorbar: bool
         Whether to show the colorbar for main heatmap
+
     show_metadata_rows: bool
         Whether to plot row annotations (default True)
     show_metadata_rows_labels: bool
@@ -125,6 +129,7 @@ class RubixHeatmap:
         // False = plot row annotations in multiple columns (WIP)
     show_cols_legend: bool
         Whether to plot the legend for column annotations (default True)
+
     colormap_main: str
         Main colormap name, must be known by holoviews (default "coolwarm" / "YlOrRd" for non-negative data).
         Ref. 1 https://holoviews.org/user_guide/Colormaps.html#perceptually-uniform-sequential-colormaps
@@ -139,6 +144,7 @@ class RubixHeatmap:
     colormap_metacols: str
         Colormap for column annotations, must be known by holoviews (default "Category20").
         Ref. https://holoviews.org/user_guide/Colormaps.html#categorical-colormaps
+
     axes_labels_style: str
         Style of row annotations and column annotations names (default "bold", can be "italic")
     legend_axes_labels_style: str
@@ -147,6 +153,7 @@ class RubixHeatmap:
         Label to use for main data columns (normally not shown on the plot)
     metadata_label: str
         Label to use for metadata (default "Metadata")
+
     pixel_size: str
         Size of the colorbar "pixel", in screen pixels (default 6)
     heatmap_width: Union[int, str, None]
@@ -157,6 +164,7 @@ class RubixHeatmap:
         Fixed main plot height in screen pixels (ignores `pixel_size` specified)
         // int = in screen pixels
         // "proportional" = proportional to fixed main plot width
+
     mrcol_for_legend: Optional[str]
         Column of metadata for row annotations to be explained in the legend.
         If not specified, the rightmost column is explained.
@@ -169,6 +177,7 @@ class RubixHeatmap:
         Name of a column in main data DF to set as rows index (optional)
     columns_label: Optional[str]
         Name of a row in main data DF to set as columns index (optional)
+
     data_rows_to_drop: Optional[list]
         Names of rows in main data not intended to be plotted (optional). Nonexistent names will be skipped.
     data_cols_to_drop: Optional[list]
@@ -674,7 +683,7 @@ class RubixHeatmap:
             if mult < 1:
                 mult = 1
 
-            gb = df.groupby(by=label, axis=0)
+            gb = df.groupby(by=label, axis=0, sort=False)
             df_split = [gb.get_group(i) for i in gb.groups]
 
             sep = pd.DataFrame(index=[""] * mult, columns=df.columns, data=[[sep_value] * len(df.columns)] * mult)
