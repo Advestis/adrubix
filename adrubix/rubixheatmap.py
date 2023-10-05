@@ -30,11 +30,11 @@ class RubixHeatmap:
 
     Three input files (CSV) or pandas DataFrames (in any combination) are expected:
 
-    - Main data (clusterized by applying, for example, NMTF to raw data).
+    - Main data (clustered by applying, for example, NMTF to raw data).
       Example of rows: biomarkers at different timepoints.
       Example of columns: patients.
 
-    - Metadata for rows. Example: column 1 = timepoint, column 2 = biomarker.
+    - Metadata for rows. Example: column 1 = time point, column 2 = biomarker.
 
     - Metadata for columns. Example: row 1 = score (Y/N), row 2 = treatment (several options), row 3 = cluster no.
 
@@ -60,143 +60,6 @@ class RubixHeatmap:
 
     With `plot_save_path` specified, HTML and PNG are saved according to it,
     otherwise, HTML only is saved in current working directory to be able to show the plot.
-
-    Parameters
-    ----------
-
-    data: Optional[pd.DataFrame]
-        File with main data
-    metadata_rows: Optional[pd.DataFrame]
-        Fle with metadata for row annotations
-    metadata_cols: Optional[pd.DataFrame]
-        File with metadata for column annotations
-    data_path: Optional[str]
-        Path to a folder with data and metadata
-    data_file: Optional[str]
-        Name of the file with main data
-    metadata_rows_file: Optional[str]
-        Name of the file with metadata for row annotations
-    metadata_cols_file: Optional[str]
-        Name of the file with metadata for column annotations
-    plot_save_path: Optional[str]
-        Path to an HTML file for saving the plot. If none is provided, HTML is saved in current working directory
-        under the name <your_python_script_name>.html and automatically opened in a web browser.
-
-    save_html: Union[bool, int, str]
-        If equal to True / string starting with "T" or "t", e.g. "True" / "1" or 1, save HTML plot
-        (if save_png is False, will always save HTML)
-    save_png: Union[bool, int, str]
-        If equal to True / string starting with "T" or "t", e.g. "True" / "1" or 1,
-        save a PNG screenshot of HTML plot
-    png_tool: str
-        // "native" (default) = with Bokeh's export_png() (requires Selenium + ChromeDriver installed, takes more time)
-        // "hti" = with html2image library (only requires a Chromium-based browser on the machine,
-        but leaves transparent background and crops PNG to screen size, thus unreliable for large plots)
-
-    color_scaling_quantile: Union[int, float]
-        Quantile for capping and scaling the data to get rid of outliers (read more about it in the README)
-    scale_along: Union[int, str, None]
-        // 0 or "columns" = per columns : x => x / max(column)
-        // 1 or "rows" = per rows : x => x / max(row)
-        // None (default, and also any other value except for 0 or 1) = do not scale
-    normalize_along: Union[int, str, None]
-        // 0 or "columns" = per columns : x => (x - median(column)) / MAD(column)
-        // 1 or "rows" = per rows : x => (x - median(row)) / MAD(row)
-        // None (default, and also any other value except for 0 or 1) = do not normalize
-
-    colorbar_title: str
-        Title of the colorbar for main heatmap
-    colorbar_height: Optional[int]
-        Height of the colorbar (default = 1/3 of main heatmap height)
-    colorbar_location: str
-        Location of the colorbar: "top", "center" or "bottom" (default), always to the right of the heatmap
-    show_colorbar: bool
-        Whether to show the colorbar for main heatmap
-
-    show_metadata_rows: bool
-        Whether to plot row annotations (default True)
-    show_metadata_rows_labels: bool
-        Whether to show row annotations' labels along vertical axis (default False)
-    show_metadata_cols: bool
-        Whether to plot column annotations (default True)
-    duplicate_metadata_cols: Optional[bool]
-        Whether to duplicate column annotations under the main heatmap.
-        If None, will be set automatically to True for dataframes longer that 70 rows.
-    show_rows_legend: bool
-        Whether to plot the legend for row annotations (default True)
-    rows_legend_onecol: bool
-        // True (default) = plot row annotations in one column, analogously to column annotations (WIP)
-        // False = plot row annotations in multiple columns (WIP)
-    show_cols_legend: bool
-        Whether to plot the legend for column annotations (default True)
-
-    colormap_main: str
-        Main colormap name, must be known by holoviews (default "coolwarm" / "YlOrRd" for non-negative data).
-        Ref. 1 https://holoviews.org/user_guide/Colormaps.html#perceptually-uniform-sequential-colormaps
-        Ref. 2 https://holoviews.org/user_guide/Colormaps.html#diverging-colormaps
-    nan_color: str
-        Hex color string "#xxxxxx" or named HTML color for filling NaN values in the main heatmap (default "black")
-    sep_color: str
-        Hex color string "#xxxxxx" or named HTML color for filling separators in the main heatmap (default "white")
-    colormap_metarows: str
-        Colormap for row annotations, must be known by holoviews (default "Glasbey").
-        Ref. https://holoviews.org/user_guide/Colormaps.html#categorical-colormaps
-    colormap_metacols: str
-        Colormap for column annotations, must be known by holoviews (default "Category20").
-        Ref. https://holoviews.org/user_guide/Colormaps.html#categorical-colormaps
-
-    axes_labels_style: str
-        Style of row annotations and column annotations names (default "bold", can be "italic")
-    legend_axes_labels_style: str
-        Style of legends names (default "italic", can be "bold")
-    data_columns_label: str
-        Label to use for main data columns (normally not shown on the plot)
-    metadata_label: str
-        Label to use for metadata (default "Metadata")
-
-    pixel_size: str
-        Size of the colorbar "pixel", in screen pixels (default 6)
-    heatmap_width: Union[int, str, None]
-        Fixed main plot width in screen pixels (ignores `pixel_size` specified)
-        // int = in screen pixels
-        // "proportional" = proportional to fixed main plot height
-    heatmap_height: Union[int, str, None]
-        Fixed main plot height in screen pixels (ignores `pixel_size` specified)
-        // int = in screen pixels
-        // "proportional" = proportional to fixed main plot width
-
-    mrcol_for_legend: Optional[str]
-        Column of metadata for row annotations to be explained in the legend.
-        If not specified, the rightmost column is explained.
-    proper_labels_for_metadata_cols_legend: Optional[dict]
-        Dict of correspondence between metadata_cols rows' names and names we'd like to show in the legend
-        (enables to use shorter names for better display)
-    row_labels_for_highlighting: Optional[list]
-        Keywords for identifying row labels to be highlighted i.e. specified on the plot (optional)
-    index_label: Optional[str]
-        Name of a column in main data DF to set as rows index (optional)
-    columns_label: Optional[str]
-        Name of a row in main data DF to set as columns index (optional)
-
-    data_rows_to_drop: Optional[list]
-        Names of rows in main data not intended to be plotted (optional). Nonexistent names will be skipped.
-    data_cols_to_drop: Optional[list]
-        Names of columns in main data not intended to be plotted (optional). Nonexistent names will be skipped.
-    metadata_rows_sep: Optional[str]
-        Insert row separators in the main DF and the metadata-rows DF before plotting,
-        according to the specified column (between groups of labels with identical values).
-        A separator is a row or a group of rows (depending on the DF length and heatmap height)
-        filled with either minimum value for non-normalized data, or median value for normalized one.
-    metadata_cols_sep: Optional[str]
-        Insert column separators in the main DF and the metadata-cols DF before plotting,
-        according to the specified rows (between groups of labels with identical values).
-        A separator is a column or a group of columns (depending on the DF length and heatmap height)
-        filled with either minimum value for non-normalized data, or median value for normalized one.
-    sep_value: str
-        // None (default) = separators will be plotted in `sep_color` (default "white")
-        // "min" = with mininum value of the DF (color will depend on the colormap)
-        // "median" = with median value of the DF (color will depend on the colormap)
-        // "adapt" = with mininum value of the DF if data normalisation is not called, median value if called
     """
 
     def __init__(
@@ -249,6 +112,145 @@ class RubixHeatmap:
             metadata_cols_sep: Optional[str] = None,
             sep_value: Optional[str] = None
     ) -> None:
+        """
+        Parameters
+        ----------
+
+        data: Optional[pd.DataFrame]
+            File with main data
+        metadata_rows: Optional[pd.DataFrame]
+            Fle with metadata for row annotations
+        metadata_cols: Optional[pd.DataFrame]
+            File with metadata for column annotations
+        data_path: Optional[str]
+            Path to a folder with data and metadata
+        data_file: Optional[str]
+            Name of the file with main data
+        metadata_rows_file: Optional[str]
+            Name of the file with metadata for row annotations
+        metadata_cols_file: Optional[str]
+            Name of the file with metadata for column annotations
+        plot_save_path: Optional[str]
+            Path to an HTML file for saving the plot. If none is provided, HTML is saved in current working directory
+            under the name <your_python_script_name>.html and automatically opened in a web browser.
+
+        save_html: Union[bool, int, str]
+            If equal to True / string starting with "T" or "t", e.g. "True" / "1" or 1, save HTML plot
+            (if save_png is False, will always save HTML)
+        save_png: Union[bool, int, str]
+            If equal to True / string starting with "T" or "t", e.g. "True" / "1" or 1,
+            save a PNG screenshot of HTML plot
+        png_tool: str
+            // "native" (default) = with Bokeh's export_png() (requires Selenium + ChromeDriver installed,
+            takes more time)
+            // "hti" = with html2image library (only requires a Chromium-based browser on the machine,
+            but leaves transparent background and crops PNG to screen size, thus unreliable for large plots)
+
+        color_scaling_quantile: Union[int, float]
+            Quantile for capping and scaling the data to get rid of outliers (read more about it in the README)
+        scale_along: Union[int, str, None]
+            // 0 or "columns" = per columns : x => x / max(column)
+            // 1 or "rows" = per rows : x => x / max(row)
+            // None (default, and also any other value except for 0 or 1) = do not scale
+        normalize_along: Union[int, str, None]
+            // 0 or "columns" = per columns : x => (x - median(column)) / MAD(column)
+            // 1 or "rows" = per rows : x => (x - median(row)) / MAD(row)
+            // None (default, and also any other value except for 0 or 1) = do not normalize
+
+        colorbar_title: str
+            Title of the colorbar for main heatmap
+        colorbar_height: Optional[int]
+            Height of the colorbar (default = 1/3 of main heatmap height)
+        colorbar_location: str
+            Location of the colorbar: "top", "center" or "bottom" (default), always to the right of the heatmap
+        show_colorbar: bool
+            Whether to show the colorbar for main heatmap
+
+        show_metadata_rows: bool
+            Whether to plot row annotations (default True)
+        show_metadata_rows_labels: bool
+            Whether to show row annotations' labels along vertical axis (default False)
+        show_metadata_cols: bool
+            Whether to plot column annotations (default True)
+        duplicate_metadata_cols: Optional[bool]
+            Whether to duplicate column annotations under the main heatmap.
+            If None, will be set automatically to True for dataframes longer than 70 rows.
+        show_rows_legend: bool
+            Whether to plot the legend for row annotations (default True)
+        rows_legend_onecol: bool
+            // True (default) = plot row annotations in one column, analogously to column annotations (WIP)
+            // False = plot row annotations in multiple columns (WIP)
+        show_cols_legend: bool
+            Whether to plot the legend for column annotations (default True)
+
+        colormap_main: str
+            Main colormap name, must be known by holoviews (default "coolwarm" / "YlOrRd" for non-negative data).
+            Ref. 1 https://holoviews.org/user_guide/Colormaps.html#perceptually-uniform-sequential-colormaps
+            Ref. 2 https://holoviews.org/user_guide/Colormaps.html#diverging-colormaps
+        nan_color: str
+            Hex color string "#xxxxxx" or named HTML color for filling NaN values in the main heatmap (default "black")
+        sep_color: str
+            Hex color string "#xxxxxx" or named HTML color for filling separators in the main heatmap (default "white")
+        colormap_metarows: str
+            Colormap for row annotations, must be known by holoviews (default "Glasbey").
+            Ref. https://holoviews.org/user_guide/Colormaps.html#categorical-colormaps
+        colormap_metacols: str
+            Colormap for column annotations, must be known by holoviews (default "Category20").
+            Ref. https://holoviews.org/user_guide/Colormaps.html#categorical-colormaps
+
+        axes_labels_style: str
+            Style of row annotations and column annotations names (default "bold", can be "italic")
+        legend_axes_labels_style: str
+            Style of legends names (default "italic", can be "bold")
+        data_columns_label: str
+            Label to use for main data columns (normally not shown on the plot)
+        metadata_label: str
+            Label to use for metadata (default "Metadata")
+
+        pixel_size: str
+            Size of the colorbar "pixel", in screen pixels (default 6)
+        heatmap_width: Union[int, str, None]
+            Fixed main plot width in screen pixels (ignores `pixel_size` specified)
+            // int = in screen pixels
+            // "proportional" = proportional to fixed main plot height
+        heatmap_height: Union[int, str, None]
+            Fixed main plot height in screen pixels (ignores `pixel_size` specified)
+            // int = in screen pixels
+            // "proportional" = proportional to fixed main plot width
+
+        mrcol_for_legend: Optional[str]
+            Column of metadata for row annotations to be explained in the legend.
+            If not specified, the rightmost column is explained.
+        proper_labels_for_metadata_cols_legend: Optional[dict]
+            Dict of correspondence between metadata_cols rows' names and names we'd like to show in the legend
+            (enables to use shorter names for better display)
+        row_labels_for_highlighting: Optional[list]
+            Keywords for identifying row labels to be highlighted i.e. specified on the plot (optional)
+        index_label: Optional[str]
+            Name of a column in main data DF to set as rows index (optional)
+        columns_label: Optional[str]
+            Name of a row in main data DF to set as columns index (optional)
+
+        data_rows_to_drop: Optional[list]
+            Names of rows in main data not intended to be plotted (optional). Nonexistent names will be skipped.
+        data_cols_to_drop: Optional[list]
+            Names of columns in main data not intended to be plotted (optional). Nonexistent names will be skipped.
+        metadata_rows_sep: Optional[str]
+            Insert row separators in the main DF and the metadata-rows DF before plotting,
+            according to the specified column (between groups of labels with identical values).
+            A separator is a row or a group of rows (depending on the DF length and heatmap height)
+            filled with either minimum value for non-normalized data, or median value for normalized one.
+        metadata_cols_sep: Optional[str]
+            Insert column separators in the main DF and the metadata-cols DF before plotting,
+            according to the specified rows (between groups of labels with identical values).
+            A separator is a column or a group of columns (depending on the DF length and heatmap height)
+            filled with either minimum value for non-normalized data, or median value for normalized one.
+        sep_value: str
+            // None (default) = separators will be plotted in `sep_color` (default "white")
+            // "min" = with minimum value of the DF (color will depend on the colormap)
+            // "median" = with median value of the DF (color will depend on the colormap)
+            // "adapt" = with minimum value of the DF if data normalisation is not called, median value if called
+        """
 
         # Auxiliary
         self.df_titles = ["Data", "Metadata rows", "Metadata cols"]
@@ -615,7 +617,7 @@ class RubixHeatmap:
 
         def cap_scale(x):
             quantile = np.percentile(x, quant)
-            x = x.apply(lambda x: quantile if x > quantile else x)
+            x = x.apply(lambda y: quantile if y > quantile else y)
             x /= quantile
             return x
 
@@ -635,7 +637,7 @@ class RubixHeatmap:
             quant_low = 50 - quant / 2
             quantile_high = np.percentile(x, quant_high)
             quantile_low = np.percentile(x, quant_low)
-            x = x.apply(lambda x: quantile_high if x > quantile_high else (quantile_low if x < quantile_low else x))
+            x = x.apply(lambda y: quantile_high if y > quantile_high else (quantile_low if y < quantile_low else y))
             x /= quantile_high
             return x
 
@@ -644,7 +646,7 @@ class RubixHeatmap:
             dev = x - median
             median_abs_dev = np.median(abs(dev))
             x = dev / median_abs_dev
-            x = x.apply(lambda x: 1 if x > 1 else (-1 if x < -1 else x))
+            x = x.apply(lambda y: 1 if y > 1 else (-1 if y < -1 else y))
             return x
 
         self.data = self.data.apply(cap_scale, axis=self.normalize_along)
